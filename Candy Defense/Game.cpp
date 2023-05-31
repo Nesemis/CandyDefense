@@ -7,21 +7,29 @@ Game::Game()
 
 
 void Game::render() {
-    window.clear(sf::Color::Black);
 
+    window.clear(sf::Color::Black);
+    mm.render(window);
     window.display();
 
 }
 
 void Game::update() {
-    sf::Event event;
-    sf::Time elapsed = clock.restart();
 
     while (window.pollEvent(event)) {
 
         if (event.type == sf::Event::Closed)
+        {
             running = false;
-        window.close();
+            window.close();
+        }
+        if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+                mm.update(mouse_pos);
+            }
+        }
+        
 
     }
 

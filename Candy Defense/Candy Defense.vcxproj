@@ -153,9 +153,14 @@
   <ItemGroup>
     <ClCompile Include="Candy Defense.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="MainMenu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="fonts\Kalam-Regular.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
