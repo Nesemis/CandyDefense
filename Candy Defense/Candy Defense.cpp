@@ -2,6 +2,11 @@
 
 int main() {
     Game game;
+    while (game.mm.isRunning())
+    {
+        game.mainMenuUpdate();
+        game.mainMenuRender();
+    }
     while (game.isRunning())
     {
         game.update();

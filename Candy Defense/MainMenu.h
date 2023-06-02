@@ -1,25 +1,20 @@
 #pragma once
-#include <iostream>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
+#include "Asset.h"
 class MainMenu{
 public:
-    MainMenu();
+    MainMenu(std::vector<std::unique_ptr<sf::Texture>>& textures);
     void render(sf::RenderWindow& window);
     void update(sf::Vector2i mouse_pos);
+    bool isRunning() const;
 private:
     sf::Font kalam;
     sf::Text text1;
     sf::Text text2;
     sf::Text text3;
-    sf::Texture texture1;
-    sf::Texture texture2;
-    sf::Texture texture3;
-    sf::Sprite sprite1;
-    sf::Sprite sprite2;
-    sf::Sprite sprite3;
+    Asset level1;
+    Asset level2;
+    Asset level3;
     int dif = 0;
-
-
-
+    int level= 0;
+    bool running = true;
 };

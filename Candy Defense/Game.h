@@ -1,22 +1,24 @@
 #pragma once
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 #include "MainMenu.h"
-#include <iostream>
+
 
 class Game {
 public:
     Game();
     void render();
     void update();
-
+    void mainMenuRender();
+    void mainMenuUpdate();
     bool isRunning() const;
     
 private:
+    std::vector<std::unique_ptr<sf::Texture>> loadTextures();
+   
+    std::vector<std::unique_ptr<sf::Texture>> vecTextures;
     sf::RenderWindow window;
     sf::Clock clock;
-    bool running = true;
-    sf::Event event;
     sf::Time elapsed;
+    bool running = true;
+public:
     MainMenu mm;
 };
