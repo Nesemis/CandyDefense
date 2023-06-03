@@ -7,9 +7,9 @@ int main() {
         game.mainMenuUpdate();
         game.mainMenuRender();
     }
+    game.createLevel();
     while (game.isRunning())
     {
-        game.createLevel();
         game.update();
         game.render();
     }

@@ -10,13 +10,18 @@ running(true){
 
 //It's waay better to preload textures and then give a pointer to the assets objects 
 //instead of loading a texture with every asset thats being created, that's why my concept shifted a little here
+//
+//And also, I initially wanted to use one texture for all tiles, 
+//but I couldn't find the ones that inerested me the most,
+//so I got to work with what I've got
 std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     std::vector<std::unique_ptr<sf::Texture>> temp;
     std::unique_ptr<sf::Texture> level1 = std::make_unique<sf::Texture>();
     std::unique_ptr<sf::Texture> level2 = std::make_unique<sf::Texture>();
     std::unique_ptr<sf::Texture> level3 = std::make_unique<sf::Texture>();
-    std::unique_ptr<sf::Texture> white = std::make_unique<sf::Texture>();
+    std::unique_ptr<sf::Texture> white = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
     std::unique_ptr<sf::Texture> milk = std::make_unique<sf::Texture>();
+    std::unique_ptr<sf::Texture> enemies = std::make_unique<sf::Texture>();
     if (!level1->loadFromFile("assets/1.png"))//checking if we loaded the assets
     {
         std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
@@ -37,15 +42,20 @@ std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     {
         std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
     }
+    if (!enemies->loadFromFile("assets/enemies.png"))
+    {
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+    }
     temp.emplace_back(std::move(level1));
     temp.emplace_back(std::move(level2));
     temp.emplace_back(std::move(level3));
     temp.emplace_back(std::move(white));
     temp.emplace_back(std::move(milk));
+    temp.emplace_back(std::move(enemies));
     return temp;
 };
 void Game::createLevel() {
-    level = std::make_unique<Level>(vecTextures);
+    level = std::make_unique<Level>(vecTextures,mm.getLevel(),mm.getDif());
 };
 
 void Game::render() {
@@ -55,8 +65,9 @@ void Game::render() {
 }
 
 void Game::update() {
-
+    elapsed = clock.restart();
     sf::Event event;
+    sf::Vector2i mouse_pos;
     while (window.pollEvent(event)) {
 
         if (event.type == sf::Event::Closed)
@@ -66,13 +77,14 @@ void Game::update() {
         }
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
-                sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+                mouse_pos = sf::Mouse::getPosition(window);
+                level.get()->update(mouse_pos);
             }
         }
 
 
     }
-
+    level.get()->update(elapsed, vecTextures);
 }
 
 //Two methods here are for render & update mainMenu
@@ -108,3 +120,5 @@ void Game::mainMenuUpdate() {
 bool Game::isRunning() const {
     return running;
 }
+
+

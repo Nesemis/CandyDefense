@@ -2,6 +2,12 @@
 #include "MainMenu.h"
 #include "Level.h"
 
+struct Arguments {
+    int hp;
+    int coinGain;
+    int waves;
+    //add number and types of enemies
+};
 
 class Game {
 public:
@@ -12,10 +18,10 @@ public:
     void mainMenuRender();
     void mainMenuUpdate();
     bool isRunning() const;
-    
 private:
     std::vector<std::unique_ptr<sf::Texture>> loadTextures(); 
-    std::vector<std::unique_ptr<sf::Texture>> vecTextures;
+    std::vector<std::unique_ptr<sf::Texture>> vecTextures; // vector of textures
+    std::vector<Arguments> vecArguments;
     sf::RenderWindow window;
     sf::Clock clock;
     sf::Time elapsed;

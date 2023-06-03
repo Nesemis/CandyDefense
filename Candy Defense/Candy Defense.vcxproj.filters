@@ -39,6 +39,9 @@
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -76,6 +82,9 @@
       <Filter>Resource Files\assets</Filter>
     </Image>
     <Image Include="assets\White Choco A.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
+    <Image Include="assets\enemies.png">
       <Filter>Resource Files\assets</Filter>
     </Image>
   </ItemGroup>
