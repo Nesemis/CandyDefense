@@ -154,12 +154,16 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="Candy Defense.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="fonts\Kalam-Regular.ttf" />
@@ -168,6 +172,8 @@
     <Image Include="assets\1.png" />
     <Image Include="assets\2.png" />
     <Image Include="assets\3.png" />
+    <Image Include="assets\Milk Choco A.png" />
+    <Image Include="assets\White Choco A.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

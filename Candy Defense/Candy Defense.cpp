@@ -9,6 +9,7 @@ int main() {
     }
     while (game.isRunning())
     {
+        game.createLevel();
         game.update();
         game.render();
     }
