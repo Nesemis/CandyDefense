@@ -87,5 +87,8 @@
     <Image Include="assets\enemies.png">
       <Filter>Resource Files\assets</Filter>
     </Image>
+    <Image Include="assets\Strawberry Choco A.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

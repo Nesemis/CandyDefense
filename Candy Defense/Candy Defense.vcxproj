@@ -176,6 +176,7 @@
     <Image Include="assets\3.png" />
     <Image Include="assets\enemies.png" />
     <Image Include="assets\Milk Choco A.png" />
+    <Image Include="assets\Strawberry Choco A.png" />
     <Image Include="assets\White Choco A.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -20,37 +20,45 @@ std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     std::unique_ptr<sf::Texture> level2 = std::make_unique<sf::Texture>();
     std::unique_ptr<sf::Texture> level3 = std::make_unique<sf::Texture>();
     std::unique_ptr<sf::Texture> white = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
-    std::unique_ptr<sf::Texture> milk = std::make_unique<sf::Texture>();
+    std::unique_ptr<sf::Texture> milk = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
+    std::unique_ptr<sf::Texture> strawberry = std::make_unique<sf::Texture>(); //REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
     std::unique_ptr<sf::Texture> enemies = std::make_unique<sf::Texture>();
+    
     if (!level1->loadFromFile("assets/1.png"))//checking if we loaded the assets
     {
-        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
     if (!level2->loadFromFile("assets/2.png"))
     {
-        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
     if (!level3->loadFromFile("assets/3.png"))
     {
-        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
     if (!white->loadFromFile("assets/White Choco A.png"))
     {
-        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
     if (!milk->loadFromFile("assets/Milk Choco A.png"))
     {
-        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
+    }
+    if (!strawberry->loadFromFile("assets/Strawberry Choco A.png"))
+    {
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
     if (!enemies->loadFromFile("assets/enemies.png"))
     {
-        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as main.cpp and theres that asset in it!" << std::endl;
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
+   
     temp.emplace_back(std::move(level1));
     temp.emplace_back(std::move(level2));
     temp.emplace_back(std::move(level3));
     temp.emplace_back(std::move(white));
     temp.emplace_back(std::move(milk));
+    temp.emplace_back(std::move(strawberry));
     temp.emplace_back(std::move(enemies));
     return temp;
 };

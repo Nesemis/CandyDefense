@@ -11,12 +11,19 @@ Level::Level(std::vector<std::unique_ptr<sf::Texture>>& textures, int level_,int
     {26, 8}, {26, 7}, {26, 6}, {26, 5}, {26, 5},
     {25, 5}, {24, 5}, {23, 5}, {22, 5}, {21,5}, {20, 5}, {19, 5}, {18, 5}, {17, 5}, {16, 5}, {15, 5}, {14,5}, {13, 5}, {12, 5}, {11, 5}, {10, 5}
     };
-    makeTiles(textures);
     std::pair<int, int> v0 = { 0,1 }; //Thats the initial velocity for the enemy, CHANGE HERE TO BE ADEQUATE TO THE CREATED LEVEL(change makeTurns()?)
-    std::pair<int, int> base = { 7,5 }; // Thats the left up corner of the base, CHANGE HERE ADEQUATE TO THE CREATED LEVEL
+    base = { 7,4 }; // Thats the left up corner of the base, CHANGE HERE ADEQUATE TO THE CREATED LEVEL
+    makeTiles(textures);
     turns.emplace_back(v0);
     makeTurns(); 
     turnPoints.emplace_back(base);
+
+    //BALANCE PLACE FOR THE ENEMY STATS
+    enemyArgs.hp += dif * 10;
+    enemyArgs.e_damage += dif * 1;
+    enemyArgs.e_speed += dif * 20;
+    enemyArgs.hp += dif * 2;
+
     e_timer.restart();
 };
 void Level::makeTiles(std::vector<std::unique_ptr<sf::Texture>>& textures)
@@ -36,6 +43,16 @@ void Level::makeTiles(std::vector<std::unique_ptr<sf::Texture>>& textures)
                     break;
                 }
             }
+            for (int m = 0; m < 3; m++)
+            {
+                for (int n = 0; n < 3; n++)
+                    if (base.first == i - m && base.second == j - n)
+                    {
+                        type = 2;
+                        vecAssets.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[5]));
+                        break;
+                    }
+            }
             if (type == 0)
             {
                 vecAssets.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[3]));
@@ -50,7 +67,7 @@ void Level::makeTurns() {
     //At first we take the diffrence of distance between two tiles
     //Then we check, if the diffrence between two next tiles didn't change
     //If it changed, we find out how it changed 
-    //Later we will multiply the change times the speed to get the velocity vector
+    //We need to take the turn points, as well as the how it will turn when enemy reaches the point
     int dx1 = path[1].first - path[0].first;
     int dy1 = path[1].second - path[0].second;
 
@@ -75,40 +92,51 @@ void Level::makeTurns() {
     }
 
 };
-
-
 void Level::render(sf::RenderWindow& window) {
+    //All assets are derived form a single class, so they all use the same method, convenient
     for (const auto& asset : vecAssets) {
         window.draw(*asset);
     }
 
 };
-//This update is called when the game notices the player input, it is only called in event section 
 void Level::update(sf::Vector2i mouse_pos){
-  
+    //This update is called when the game notices the player input, it is only called in event section 
+
 };
 void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>& textures) {
     //Spawn enemies every 2 seconds until you've reached the end of enemies counter
     int interval = 2;
     if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
         enemies--;
-        vecAssets.emplace_back(std::make_unique<Enemy>(sf::Vector2f(100,0), textures[5],10, 500, turns,turnPoints));
+        vecAssets.emplace_back(std::make_unique<Enemy>(enemyArgs,sf::Vector2f(100,0), textures[6], turns,turnPoints));
         e_timer.restart();
     }
-    //Virtual method update is diffrent for every asset, so it will do diffrent things to tiles
+    //Check what the assets do
+    //Virtual method update is diffrent for every asset, so it will do diffrent things to tiles, diffrent to towers etc.
     
     for (auto it = vecAssets.begin(); it != vecAssets.end(); ) {
         (*it)->update(elapsed);
 
         Enemy* enemy = dynamic_cast<Enemy*>(it->get());
         if (enemy != nullptr && enemy->hasReachedTarget()) {
+            hp -= enemy->getDamage();
+            if (hp < 0)
+            {
+                // Do something here if the player looses 
+                break;
+            }
+            it = vecAssets.erase(it);
+        }
+        else if (enemy != nullptr && enemy->isDead())
+        {
+            coins += enemy->getCoins();
             it = vecAssets.erase(it);
         }
         else
         {
             it++;
         }
-
+                        
     }
 
 };
