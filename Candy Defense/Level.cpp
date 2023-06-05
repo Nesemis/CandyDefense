@@ -1,6 +1,7 @@
 #include "Level.h"
 
-Level::Level(std::vector<std::unique_ptr<sf::Texture>>& textures, int level_,int dif_):level(level_), dif(dif_) {
+Level::Level(std::vector<std::unique_ptr<sf::Texture>>& textures, int level_,int dif_):level(level_), dif(dif_),
+UI(textures[3]){
     path = {
     {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8}, {2, 9}, {2, 10}, {2, 11},
     {3, 11}, {4, 11},  {5, 11},  {6, 11}, {7, 11}, {8, 11}, {9, 11}, {10, 11},  {11, 11}, {12, 11}, {13, 11}, {14, 11}, {15, 11},  {16, 11}, {17, 11}, {18, 11}, {19, 11}, {20, 11},  {21, 11}, {22, 11},{23, 11},{24, 11},{25, 11},{26, 11},{27, 11},{28, 11},{29, 11},
@@ -87,9 +88,6 @@ void Level::makeTurns() {
         dy1 = dy2;
     }
     
-    for (auto& turn : turnPoints) {
-        std::cout << turn.first << " " << turn.second << std::endl;
-    }
 
 };
 void Level::render(sf::RenderWindow& window) {
@@ -97,13 +95,15 @@ void Level::render(sf::RenderWindow& window) {
     for (const auto& asset : vecAssets) {
         window.draw(*asset);
     }
-
+    UI.render(window);
 };
 void Level::update(sf::Vector2i mouse_pos){
     //This update is called when the game notices the player input, it is only called in event section 
-
+    UI.update(mouse_pos);
 };
-void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>& textures) {
+void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos_) {
+    //Update every frame
+    UI.update(mouse_pos_, hp, coins);
     //Spawn enemies every 2 seconds until you've reached the end of enemies counter
     int interval = 2;
     if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {

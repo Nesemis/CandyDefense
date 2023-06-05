@@ -75,7 +75,7 @@ void Game::render() {
 void Game::update() {
     elapsed = clock.restart();
     sf::Event event;
-    sf::Vector2i mouse_pos;
+    sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
     while (window.pollEvent(event)) {
 
         if (event.type == sf::Event::Closed)
@@ -92,7 +92,7 @@ void Game::update() {
 
 
     }
-    level.get()->update(elapsed, vecTextures);
+    level.get()->update(elapsed, vecTextures,mouse_pos);
 }
 
 //Two methods here are for render & update mainMenu

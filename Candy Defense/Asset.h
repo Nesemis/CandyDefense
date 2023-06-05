@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <cstdlib>
+#include <functional>
 class Asset : public sf::Sprite
 {
 public:
