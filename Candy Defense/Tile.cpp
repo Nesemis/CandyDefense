@@ -1,6 +1,7 @@
 #include "Tile.h"
 void Tile::update(sf::Time& elapsed)
 {
+
 }
 Tile::Tile(sf::Vector2f pos, int type, std::unique_ptr<sf::Texture>& texture_)
     : Asset(pos, texture_), type(type)

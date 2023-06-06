@@ -40,7 +40,7 @@ void Level::makeTiles(std::vector<std::unique_ptr<sf::Texture>>& textures)
             for (const auto& tilePos : path) {
                 if (tilePos.first == i && tilePos.second == j) {
                     type = 1;
-                    vecAssets.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[4]));
+                    vecTiles.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[4]));
                     break;
                 }
             }
@@ -50,13 +50,13 @@ void Level::makeTiles(std::vector<std::unique_ptr<sf::Texture>>& textures)
                     if (base.first == i - m && base.second == j - n)
                     {
                         type = 2;
-                        vecAssets.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[5]));
+                        vecTiles.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[5]));
                         break;
                     }
             }
             if (type == 0)
             {
-                vecAssets.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[3]));
+                vecTiles.emplace_back(std::make_unique<Tile>(sf::Vector2f(static_cast<float>(posX), static_cast<float>(posY)), type, textures[3]));
             }
            
 
@@ -92,14 +92,40 @@ void Level::makeTurns() {
 };
 void Level::render(sf::RenderWindow& window) {
     //All assets are derived form a single class, so they all use the same method, convenient
-    for (const auto& asset : vecAssets) {
-        window.draw(*asset);
+    for (const auto& tile : vecTiles) {
+        tile.get()->draw(window);
+    }
+    for (const auto& enemy : vecEnemies) {
+        enemy.get()->draw(window);
+    }
+    for (const auto& tower : vecTowers) {
+        tower.get()->draw(window);
     }
     UI.render(window);
 };
-void Level::update(sf::Vector2i mouse_pos){
+void Level::update(sf::Vector2i mouse_pos, std::vector<std::unique_ptr<sf::Texture>>& textures_){
     //This update is called when the game notices the player input, it is only called in event section 
+    if (UI.getPlaceMode())
+    {
+        for (auto& tile : vecTiles)
+        {
+            sf::FloatRect tileDim = tile.get()->getGlobalBounds();
+            if (tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            {
+                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
+                UI.placeRectangle.setFillColor(sf::Color::Green);
+                vecTowers.emplace_back(std::make_unique<Tower>(towerArgs, sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+            }
+            else if ((tile.get()->type == 2 || tile.get()->type == 1) && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            {
+                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
+                UI.placeRectangle.setFillColor(sf::Color::Red);
+            }
+            else UI.placeRectangle.setSize(sf::Vector2f(0,0));
+        };
+    };
     UI.update(mouse_pos);
+    
 };
 void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos_) {
     //Update every frame
@@ -108,35 +134,62 @@ void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>&
     int interval = 2;
     if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
         enemies--;
-        vecAssets.emplace_back(std::make_unique<Enemy>(enemyArgs,sf::Vector2f(100,0), textures[6], turns,turnPoints));
+        vecEnemies.emplace_back(std::make_unique<Enemy>(enemyArgs,sf::Vector2f(100,0), textures[6], turns,turnPoints));
         e_timer.restart();
     }
-    //Check what the assets do
-    //Virtual method update is diffrent for every asset, so it will do diffrent things to tiles, diffrent to towers etc.
+    // here we update the enemy 
     
-    for (auto it = vecAssets.begin(); it != vecAssets.end(); ) {
-        (*it)->update(elapsed);
-
-        Enemy* enemy = dynamic_cast<Enemy*>(it->get());
-        if (enemy != nullptr && enemy->hasReachedTarget()) {
-            hp -= enemy->getDamage();
-            if (hp < 0)
+    for (auto it = vecEnemies.begin(); it != vecEnemies.end(); ) {
+    
+            (*it)->update(elapsed);
+            if((*it)->hasReachedTarget()) {
+                 hp -= (*it)->getDamage();
+                 if (hp < 0)
+                 {
+                     // Do something here if the player looses 
+                     break;
+                 }
+            it = vecEnemies.erase(it);
+            }
+            else if ((*it)->isDead())
             {
-                // Do something here if the player looses 
+            coins += (*it)->getCoins();
+            it = vecEnemies.erase(it);
+            }
+            else
+            {
+                it++;
+            }
+    }
+    //Control the place rectangle
+    if (UI.getPlaceMode())
+    {
+        for (auto& tile : vecTiles)
+        {
+            sf::FloatRect tileDim = tile.get()->getGlobalBounds();
+            if (tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
+            {
+                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
+                UI.placeRectangle.setFillColor(sf::Color::Green);
                 break;
             }
-            it = vecAssets.erase(it);
-        }
-        else if (enemy != nullptr && enemy->isDead())
-        {
-            coins += enemy->getCoins();
-            it = vecAssets.erase(it);
-        }
-        else
-        {
-            it++;
-        }
-                        
+            else if ((tile.get()->type == 2 || tile.get()->type == 1) && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
+            {
+                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
+                UI.placeRectangle.setFillColor(sf::Color::Red);
+                break;
+            }
+            else
+            {
+                UI.placeRectangle.setSize(sf::Vector2f(0, 0));
+            }
+        };
+    };
+    // here we update the towers
+    for (auto it = vecTowers.begin(); it != vecTowers.end(); ) {
+
+        (*it)->update(vecEnemies);
+        it++;
     }
 
 };

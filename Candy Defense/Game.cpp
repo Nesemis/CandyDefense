@@ -23,6 +23,7 @@ std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     std::unique_ptr<sf::Texture> milk = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
     std::unique_ptr<sf::Texture> strawberry = std::make_unique<sf::Texture>(); //REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
     std::unique_ptr<sf::Texture> enemies = std::make_unique<sf::Texture>();
+    std::unique_ptr<sf::Texture> towers = std::make_unique<sf::Texture>();
     
     if (!level1->loadFromFile("assets/1.png"))//checking if we loaded the assets
     {
@@ -52,7 +53,10 @@ std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     {
         std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
-   
+    if (!towers->loadFromFile("assets/enemies.png"))
+    {
+        std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
+    }
     temp.emplace_back(std::move(level1));
     temp.emplace_back(std::move(level2));
     temp.emplace_back(std::move(level3));
@@ -60,6 +64,7 @@ std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     temp.emplace_back(std::move(milk));
     temp.emplace_back(std::move(strawberry));
     temp.emplace_back(std::move(enemies));
+    temp.emplace_back(std::move(towers));
     return temp;
 };
 void Game::createLevel() {
@@ -86,7 +91,7 @@ void Game::update() {
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 mouse_pos = sf::Mouse::getPosition(window);
-                level.get()->update(mouse_pos);
+                level.get()->update(mouse_pos, vecTextures);
             }
         }
 

@@ -42,15 +42,82 @@ UserInterface::UserInterface(std::unique_ptr<sf::Texture>& texture_){
         std::cout << "Error loading Kalam Font!\n Make sure theres fonts file in the same file as main.cpp and theres Kalam-Regular.ttf in it!" << std::endl;
     }
 
-    placeRectangle.setFillColor(sf::Color::Green);
-    placeRectangle.setSize(sf::Vector2f(50.f, 50.f));
+    // create buttons for UI
     buttons.emplace_back(sf::Vector2f(200, 720), texture_, font, "Candy Tower");
-    buttons.emplace_back(sf::Vector2f(500, 720), texture_, font, "Bubblegum shot");
-        
-    buttons.emplace_back(sf::Vector2f(800, 720), texture_, font, "Cane Blaster");
-        
-    buttons.emplace_back(sf::Vector2f(1100, 720), texture_, font, "Sweet Eraser");
+    buttons.emplace_back(sf::Vector2f(550, 720), texture_, font, "Bubblegum shot");      
+    buttons.emplace_back(sf::Vector2f(900, 720), texture_, font, "Cane Blaster");
+    buttons.emplace_back(sf::Vector2f(1250, 720), texture_, font, "Sweet Eraser");
 
+    // create text to diplay, for only 4 buttons lets do it manually
+    std::unique_ptr<sf::Text> hp = std::make_unique<sf::Text>();
+    (*hp).setString("HP: 100");
+    (*hp).setFont(*font);
+    (*hp).setCharacterSize(30);
+    (*hp).setFillColor(sf::Color::Red);
+    (*hp).setPosition(sf::Vector2f(50,810));
+    std::unique_ptr<sf::Text> coins = std::make_unique<sf::Text>();
+    (*coins).setString("Coins: 100");
+    (*coins).setFont(*font);
+    (*coins).setCharacterSize(30);
+    (*coins).setFillColor(sf::Color::Yellow);
+    (*coins).setPosition(sf::Vector2f(50, 840));
+    std::unique_ptr<sf::Text> waves = std::make_unique<sf::Text>();
+    (*waves).setString("5");
+    (*waves).setFont(*font);
+
+    std::unique_ptr<sf::Text> towerPrice = std::make_unique<sf::Text>();
+    (*towerPrice).setString("100");
+    (*towerPrice).setFont(*font);
+    (*towerPrice).setCharacterSize(22);
+    (*towerPrice).setFillColor(sf::Color::Yellow);
+    sf::FloatRect textBounds = (*towerPrice).getLocalBounds();
+    sf::Vector2f textPosition(buttons[0].getGlobalBounds().left + buttons[0].getGlobalBounds().width / 2.f - textBounds.width / 2.f,
+        buttons[0].getGlobalBounds().top + buttons[0].getGlobalBounds().height / 2.f - textBounds.height / 2.f + buttons[0].getGlobalBounds().height);
+
+    (*towerPrice).setPosition(sf::Vector2f(textPosition));
+
+    std::unique_ptr<sf::Text> bubblegumPrice = std::make_unique<sf::Text>();
+    (*bubblegumPrice).setString("300");
+    (*bubblegumPrice).setFont(*font);
+    (*bubblegumPrice).setCharacterSize(22);
+    (*bubblegumPrice).setFillColor(sf::Color::Yellow);
+    textBounds = (*bubblegumPrice).getLocalBounds();
+    textPosition = sf::Vector2f(buttons[1].getGlobalBounds().left + buttons[1].getGlobalBounds().width / 2.f - textBounds.width / 2.f,
+        buttons[1].getGlobalBounds().top + buttons[1].getGlobalBounds().height / 2.f - textBounds.height / 2.f + buttons[1].getGlobalBounds().height);
+
+    (*bubblegumPrice).setPosition(sf::Vector2f(textPosition));
+
+    std::unique_ptr<sf::Text> blasterPrice = std::make_unique<sf::Text>();
+    (*blasterPrice).setString("500");
+    (*blasterPrice).setFont(*font);
+    (*blasterPrice).setCharacterSize(22);
+    (*blasterPrice).setFillColor(sf::Color::Yellow);
+
+    textBounds = (*blasterPrice).getLocalBounds();
+    textPosition = sf::Vector2f(buttons[2].getGlobalBounds().left + buttons[2].getGlobalBounds().width / 2.f - textBounds.width / 2.f,
+        buttons[2].getGlobalBounds().top + buttons[2].getGlobalBounds().height / 2.f - textBounds.height / 2.f + buttons[2].getGlobalBounds().height);
+
+    (*blasterPrice).setPosition(sf::Vector2f(textPosition));
+
+    std::unique_ptr<sf::Text> eraserPrice = std::make_unique<sf::Text>();
+    (*eraserPrice).setString("1000");
+    (*eraserPrice).setFont(*font);
+    (*eraserPrice).setCharacterSize(22);
+    (*eraserPrice).setFillColor(sf::Color::Yellow);
+
+    textBounds = (*eraserPrice).getLocalBounds();
+    textPosition = sf::Vector2f(buttons[3].getGlobalBounds().left + buttons[3].getGlobalBounds().width / 2.f - textBounds.width / 2.f,
+        buttons[3].getGlobalBounds().top + buttons[3].getGlobalBounds().height / 2.f - textBounds.height / 2.f + buttons[3].getGlobalBounds().height);
+
+    (*eraserPrice).setPosition(sf::Vector2f(textPosition));
+
+    UItext.emplace_back(std::move(hp));
+    UItext.emplace_back(std::move(coins));
+    UItext.emplace_back(std::move(waves));
+    UItext.emplace_back(std::move(towerPrice));
+    UItext.emplace_back(std::move(bubblegumPrice));
+    UItext.emplace_back(std::move(blasterPrice));
+    UItext.emplace_back(std::move(eraserPrice));
 }
 
 void UserInterface::update(sf::Vector2i mouse_pos) {
@@ -61,14 +128,14 @@ void UserInterface::update(sf::Vector2i mouse_pos) {
         if (buttons[i].getGlobalBounds().contains(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))
         {
             //Put the methods for this specific button
-            placeModeOn = !placeModeOn;
+            placeModeOn = true;
             break;
         };
         
     }
     if (i == buttons.size())
     {
-        placeModeOn = !placeModeOn;
+        placeModeOn = false;
         //Place the rectangle or cancel the placement
     }
 }
@@ -76,11 +143,19 @@ void UserInterface::update(sf::Vector2i mouse_pos, int hp, int coins) {
 
     //Constantly update the position of mouse if its in place mode
     if (placeModeOn) {
-        placeRectangle.setPosition(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y));
+        //Set position of the square to the tile where the mouse is on
+        int x = mouse_pos.x - mouse_pos.x%50;
+        int y = mouse_pos.y - mouse_pos.y%50;
+        placeRectangle.setPosition(static_cast<float>(x), static_cast<float>(y));
     }
 
 }
 
+
+bool UserInterface::getPlaceMode()
+{
+    return placeModeOn;
+}
 
 void UserInterface::render(sf::RenderWindow& window) {
     window.draw(background);
@@ -88,7 +163,12 @@ void UserInterface::render(sf::RenderWindow& window) {
         button.render(window);
         
     }
+    for (auto& text : UItext) {
+        window.draw(*text);
+    }
     if (placeModeOn) {
         window.draw(placeRectangle);
     }
 }
+
+
