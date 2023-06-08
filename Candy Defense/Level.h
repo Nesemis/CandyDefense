@@ -26,9 +26,8 @@ private:
 	int enemies = 5;
 	int hp = 100;
 	int coins = 100;
-	int level = 1;
 	eArgs enemyArgs;
-	tArgs towerArgs;
+	int level = 1;
 	int dif = 0;
 };
 

@@ -1,7 +1,8 @@
 #include "Asset.h"
+#include "Bullet.h"
 struct eArgs
 {
-    int hp = 20;
+    int hp = 1;
     float e_speed = 200;
     int e_damage = 1;
     int coin_gain = 20;
@@ -11,7 +12,7 @@ class Enemy : public Asset
 {
 public:
     Enemy(eArgs args_, sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP);
-    void update(sf::Time& elapsed);
+    void update(sf::Time& elapsed, std::vector<std::unique_ptr<Bullet>>& bullets);
     bool hasReachedTarget() const;
     bool isDead() const;
     int getDamage() const;

@@ -20,10 +20,10 @@ UI(textures[3]){
     turnPoints.emplace_back(base);
 
     //BALANCE PLACE FOR THE ENEMY STATS
-    enemyArgs.hp += dif * 10;
-    enemyArgs.e_damage += dif * 1;
-    enemyArgs.e_speed += dif * 20;
-    enemyArgs.hp += dif * 2;
+    enemyArgs.hp += dif*(enemyArgs.hp*0.5)+ dif*0.5;
+    enemyArgs.e_damage += dif * (enemyArgs.e_damage * 0.5)+ dif * 0.5;
+    enemyArgs.e_speed += dif * 50;
+    enemyArgs.coin_gain -= dif * (enemyArgs.coin_gain * 0.1) + dif * 1;
 
     e_timer.restart();
 };
@@ -90,41 +90,22 @@ void Level::makeTurns() {
     
 
 };
-void Level::render(sf::RenderWindow& window) {
-    //All assets are derived form a single class, so they all use the same method, convenient
-    for (const auto& tile : vecTiles) {
-        tile.get()->draw(window);
-    }
-    for (const auto& enemy : vecEnemies) {
-        enemy.get()->draw(window);
-    }
-    for (const auto& tower : vecTowers) {
-        tower.get()->draw(window);
-    }
-    for (const auto& bullet : vecBullets) {
-        bullet.get()->draw(window);
-    }
-    UI.render(window);
-};
+
 void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures_){
     //This update is called when the game notices the player input, it is only called in event section 
+    //IT WORKS ONLY ON CLICK
     if (UI.getPlaceMode())
     {
+
         for (auto& tile : vecTiles)
         {
             sf::FloatRect tileDim = tile.get()->getGlobalBounds();
-            if (tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            //price is a static element for every tower
+            if (Tower::getPrice() <= coins&&tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
             {
-                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
-                UI.placeRectangle.setFillColor(sf::Color::Green);
-                vecTowers.emplace_back(std::make_unique<Tower>(towerArgs, sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                coins -= Tower::getPrice();
+                vecTowers.emplace_back(std::make_unique<Tower>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); // ### Change it to have only 2 arguments
             }
-            else if ((tile.get()->type == 2 || tile.get()->type == 1) && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
-            {
-                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
-                UI.placeRectangle.setFillColor(sf::Color::Red);
-            }
-            else UI.placeRectangle.setSize(sf::Vector2f(0,0));
         };
     };
     UI.update(mouse_pos);
@@ -143,8 +124,8 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     // here we update the enemy 
     
     for (auto it = vecEnemies.begin(); it != vecEnemies.end(); ) {
-    
-            (*it)->update(elapsed);
+    // If it reached the base, subtract hp
+            (*it)->update(elapsed,vecBullets);
             if((*it)->hasReachedTarget()) {
                  hp -= (*it)->getDamage();
                  if (hp < 0)
@@ -154,6 +135,7 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
                  }
             it = vecEnemies.erase(it);
             }
+            //if it is dead, add coins
             else if ((*it)->isDead())
             {
             coins += (*it)->getCoins();
@@ -170,13 +152,14 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
         for (auto& tile : vecTiles)
         {
             sf::FloatRect tileDim = tile.get()->getGlobalBounds();
-            if (tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
+            if (Tower::getPrice() <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
             {
                 UI.placeRectangle.setSize(sf::Vector2f(50, 50));
                 UI.placeRectangle.setFillColor(sf::Color::Green);
                 break;
-            }
-            else if ((tile.get()->type == 2 || tile.get()->type == 1) && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
+            } // If we have no money and we are on tile where we can put the tower OR if we are on the tile where we cannot put towers, change color to red
+            else if ( ((Tower::getPrice() > coins && tile.get()->type == 0 )||
+                (tile.get()->type == 2 || tile.get()->type == 1) )&& tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))) )
             {
                 UI.placeRectangle.setSize(sf::Vector2f(50, 50));
                 UI.placeRectangle.setFillColor(sf::Color::Red);
@@ -189,6 +172,7 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
       
         };
     };
+    //Here we update the bullets
     for (auto it = vecBullets.begin(); it != vecBullets.end(); ) {
 
         (*it)->update(elapsed);
@@ -200,7 +184,23 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
         (*it)->update(vecEnemies, vecBullets);
         it++;
     }
-    //Here we update the bullets
+
     
 
+};
+void Level::render(sf::RenderWindow& window) {
+    //All assets are derived form a single class, so they all use the same method, convenient
+    for (const auto& tile : vecTiles) {
+        tile.get()->draw(window);
+    }
+    for (const auto& enemy : vecEnemies) {
+        enemy.get()->draw(window);
+    }
+    for (const auto& tower : vecTowers) {
+        tower.get()->draw(window);
+    }
+    for (const auto& bullet : vecBullets) {
+        bullet.get()->draw(window);
+    }
+    UI.render(window);
 };

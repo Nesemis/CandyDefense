@@ -1,7 +1,8 @@
 #include "UserInterface.h"
 
-Button::Button( sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ,std::unique_ptr<sf::Font> &font_,  std::string text)
-    : Asset(position, texture_) {
+Button::Button( sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ,std::unique_ptr<sf::Font> &font_,  std::string text, TowerType tt)
+    : Asset(position, texture_),
+    towerType(tt){
     this->setTextureRect(sf::IntRect(64, 48, 48, 16));
     this->setScale(3.5f, 3.5f);
     buttonText.setFont(*font_);
@@ -16,14 +17,17 @@ Button::Button( sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ,s
     buttonText.setPosition(textPosition);
 }
 
-void Button::Callback() {
-    onClickCallback();
-}
+
 
 void Button::render(sf::RenderWindow& window) {
 
     window.draw(*this);
     window.draw(buttonText);
+}
+
+TowerType Button::getTowerType()
+{
+    return towerType;
 }
 
 
@@ -43,10 +47,10 @@ UserInterface::UserInterface(std::shared_ptr<sf::Texture>& texture_){
     }
 
     // create buttons for UI
-    buttons.emplace_back(sf::Vector2f(200, 720), texture_, font, "Candy Tower");
-    buttons.emplace_back(sf::Vector2f(550, 720), texture_, font, "Bubblegum shot");      
-    buttons.emplace_back(sf::Vector2f(900, 720), texture_, font, "Cane Blaster");
-    buttons.emplace_back(sf::Vector2f(1250, 720), texture_, font, "Sweet Eraser");
+    buttons.emplace_back(sf::Vector2f(200, 720), texture_, font, "Candy Tower", TowerType::CandyTower);
+    buttons.emplace_back(sf::Vector2f(550, 720), texture_, font, "Bubblegum shot", TowerType::BubblegumShot);
+    buttons.emplace_back(sf::Vector2f(900, 720), texture_, font, "Cane Blaster", TowerType::CaneBlaster);
+    buttons.emplace_back(sf::Vector2f(1250, 720), texture_, font, "Sweet Eraser", TowerType::SweetEraser);
 
     // create text to diplay, for only 4 buttons lets do it manually
     std::unique_ptr<sf::Text> hp = std::make_unique<sf::Text>();
@@ -127,7 +131,7 @@ void UserInterface::update(sf::Vector2i mouse_pos) {
     for (i; i < buttons.size();i++) {
         if (buttons[i].getGlobalBounds().contains(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))
         {
-            //Put the methods for this specific button
+            selectedTower = buttons[i].getTowerType();
             placeModeOn = true;
             break;
         };
@@ -139,9 +143,12 @@ void UserInterface::update(sf::Vector2i mouse_pos) {
         //Place the rectangle or cancel the placement
     }
 }
-void UserInterface::update(sf::Vector2i mouse_pos, int hp, int coins) {
+void UserInterface::update(sf::Vector2i mouse_pos, int& hp, int& coins) {
 
     //Constantly update the position of mouse if its in place mode
+    //At first, update the strings
+    UItext[0].get()->setString("HP: " + std::to_string(hp));
+    UItext[1].get()->setString("Coins: " + std::to_string(coins));
     if (placeModeOn) {
         //Set position of the square to the tile where the mouse is on
         int x = mouse_pos.x - mouse_pos.x%50;

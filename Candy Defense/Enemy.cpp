@@ -12,10 +12,10 @@ Enemy::Enemy(eArgs args_, sf::Vector2f position, std::shared_ptr<sf::Texture>& t
     this->setScale(3.60f,3.60f);
 }
 
-void Enemy::update(sf::Time& elapsed)
+void Enemy::update(sf::Time& elapsed, std::vector<std::unique_ptr<Bullet>>& bullets)
 {
+    //In the first part we move the enemy
     //The enemy need to chceck on which turn it is currently, and then take the next turn
-
     sf::Vector2f velocity = sf::Vector2f(static_cast<float>(turns[currentTurn].first), static_cast<float>(turns[currentTurn].second));
     this->move(velocity*args.e_speed * elapsed.asSeconds()); 
     // here it needs to chceck if after the move it reached the turn and should currentTurn++
@@ -34,10 +34,23 @@ void Enemy::update(sf::Time& elapsed)
     {
         reachedTarget = true;
     }
-    if (args.hp < 0)
-    {
-        is_dead = true;
+
+    //In the second part the enemy checks if it was hit by bullet
+
+    for (int i = 0; i < bullets.size(); i++) {
+        if (this->getGlobalBounds().intersects(bullets[i].get()->getGlobalBounds())) {
+            args.hp -= bullets[i].get()->getDamage();
+            bullets.erase(bullets.begin() + i);
+            i--;
+            if (args.hp <= 0)
+            {
+                is_dead = true;
+            }
+        }
     }
+
+
+
 }
 
 
