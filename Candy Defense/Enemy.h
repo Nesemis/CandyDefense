@@ -10,7 +10,7 @@ struct eArgs
 class Enemy : public Asset
 {
 public:
-    Enemy(eArgs args_, sf::Vector2f position, std::unique_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP);
+    Enemy(eArgs args_, sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP);
     void update(sf::Time& elapsed);
     bool hasReachedTarget() const;
     bool isDead() const;

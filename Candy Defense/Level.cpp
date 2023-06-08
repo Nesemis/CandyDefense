@@ -1,6 +1,6 @@
 #include "Level.h"
 
-Level::Level(std::vector<std::unique_ptr<sf::Texture>>& textures, int level_,int dif_):level(level_), dif(dif_),
+Level::Level(std::vector<std::shared_ptr<sf::Texture>>& textures, int level_,int dif_):level(level_), dif(dif_),
 UI(textures[3]){
     path = {
     {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8}, {2, 9}, {2, 10}, {2, 11},
@@ -27,7 +27,7 @@ UI(textures[3]){
 
     e_timer.restart();
 };
-void Level::makeTiles(std::vector<std::unique_ptr<sf::Texture>>& textures)
+void Level::makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures)
 {
     const int numTilesX = 1600 / Tile::TILE_SIZE;
     const int numTilesY = 700 / Tile::TILE_SIZE;
@@ -101,9 +101,12 @@ void Level::render(sf::RenderWindow& window) {
     for (const auto& tower : vecTowers) {
         tower.get()->draw(window);
     }
+    for (const auto& bullet : vecBullets) {
+        bullet.get()->draw(window);
+    }
     UI.render(window);
 };
-void Level::update(sf::Vector2i mouse_pos, std::vector<std::unique_ptr<sf::Texture>>& textures_){
+void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures_){
     //This update is called when the game notices the player input, it is only called in event section 
     if (UI.getPlaceMode())
     {
@@ -127,7 +130,7 @@ void Level::update(sf::Vector2i mouse_pos, std::vector<std::unique_ptr<sf::Textu
     UI.update(mouse_pos);
     
 };
-void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos_) {
+void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos_) {
     //Update every frame
     UI.update(mouse_pos_, hp, coins);
     //Spawn enemies every 2 seconds until you've reached the end of enemies counter
@@ -183,13 +186,21 @@ void Level::update(sf::Time &elapsed, std::vector<std::unique_ptr<sf::Texture>>&
             {
                 UI.placeRectangle.setSize(sf::Vector2f(0, 0));
             }
+      
         };
     };
+    for (auto it = vecBullets.begin(); it != vecBullets.end(); ) {
+
+        (*it)->update(elapsed);
+        it++;
+    }
     // here we update the towers
     for (auto it = vecTowers.begin(); it != vecTowers.end(); ) {
 
-        (*it)->update(vecEnemies);
+        (*it)->update(vecEnemies, vecBullets);
         it++;
     }
+    //Here we update the bullets
+    
 
 };

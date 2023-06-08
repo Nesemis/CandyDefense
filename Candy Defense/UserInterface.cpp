@@ -1,6 +1,6 @@
 #include "UserInterface.h"
 
-Button::Button( sf::Vector2f position, std::unique_ptr<sf::Texture>& texture_ ,std::unique_ptr<sf::Font> &font_,  std::string text)
+Button::Button( sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ,std::unique_ptr<sf::Font> &font_,  std::string text)
     : Asset(position, texture_) {
     this->setTextureRect(sf::IntRect(64, 48, 48, 16));
     this->setScale(3.5f, 3.5f);
@@ -30,7 +30,7 @@ void Button::render(sf::RenderWindow& window) {
 //UI
 
 
-UserInterface::UserInterface(std::unique_ptr<sf::Texture>& texture_){
+UserInterface::UserInterface(std::shared_ptr<sf::Texture>& texture_){
     font = std::make_unique<sf::Font>();
     background.setFillColor(sf::Color(139, 69, 19));
     background.setSize(sf::Vector2f(1580, 180));

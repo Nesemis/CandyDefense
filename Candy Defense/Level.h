@@ -5,10 +5,10 @@
 class Level
 {
 public:
-	Level(std::vector<std::unique_ptr<sf::Texture>>& textures, int level, int dif);
+	Level(std::vector<std::shared_ptr<sf::Texture>>& textures, int level, int dif);
 	void render(sf::RenderWindow& window);
-	void update(sf::Vector2i mouse_pos, std::vector<std::unique_ptr<sf::Texture>>& textures);
-	void update(sf::Time& elapsed, std::vector<std::unique_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos);
+	void update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures);
+	void update(sf::Time& elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos);
 private:
 	std::pair<int, int> base;
 	std::vector<std::pair<int, int>> path; // path for the enemies to follow
@@ -18,8 +18,9 @@ private:
 	std::vector<std::unique_ptr<Tower>> vecTowers;
 	std::vector<std::unique_ptr<Enemy>> vecEnemies;
 	std::vector<std::unique_ptr<Tile>> vecTiles;
+	std::vector<std::unique_ptr<Bullet>> vecBullets;
 	UserInterface UI;
-	void makeTiles(std::vector<std::unique_ptr<sf::Texture>>& textures);
+	void makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void makeTurns();
 	sf::Clock e_timer;
 	int enemies = 5;

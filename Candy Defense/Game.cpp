@@ -14,16 +14,16 @@ running(true){
 //And also, I initially wanted to use one texture for all tiles, 
 //but I couldn't find the ones that inerested me the most,
 //so I got to work with what I've got
-std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
-    std::vector<std::unique_ptr<sf::Texture>> temp;
-    std::unique_ptr<sf::Texture> level1 = std::make_unique<sf::Texture>();
-    std::unique_ptr<sf::Texture> level2 = std::make_unique<sf::Texture>();
-    std::unique_ptr<sf::Texture> level3 = std::make_unique<sf::Texture>();
-    std::unique_ptr<sf::Texture> white = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
-    std::unique_ptr<sf::Texture> milk = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
-    std::unique_ptr<sf::Texture> strawberry = std::make_unique<sf::Texture>(); //REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
-    std::unique_ptr<sf::Texture> enemies = std::make_unique<sf::Texture>();
-    std::unique_ptr<sf::Texture> towers = std::make_unique<sf::Texture>();
+std::vector<std::shared_ptr<sf::Texture>> Game::loadTextures() {
+    std::vector<std::shared_ptr<sf::Texture>> temp;
+    std::shared_ptr<sf::Texture> level1 = std::make_unique<sf::Texture>();
+    std::shared_ptr<sf::Texture> level2 = std::make_unique<sf::Texture>();
+    std::shared_ptr<sf::Texture> level3 = std::make_unique<sf::Texture>();
+    std::shared_ptr<sf::Texture> white = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
+    std::shared_ptr<sf::Texture> milk = std::make_unique<sf::Texture>();// REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
+    std::shared_ptr<sf::Texture> strawberry = std::make_unique<sf::Texture>(); //REMEMBER TO MENTION THE AUTHOR!!!: https://uchimama.itch.io/  
+    std::shared_ptr<sf::Texture> enemies = std::make_unique<sf::Texture>();
+    std::shared_ptr<sf::Texture> towers = std::make_unique<sf::Texture>();
     
     if (!level1->loadFromFile("assets/1.png"))//checking if we loaded the assets
     {
@@ -53,7 +53,7 @@ std::vector<std::unique_ptr<sf::Texture>> Game::loadTextures() {
     {
         std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }
-    if (!towers->loadFromFile("assets/enemies.png"))
+    if (!towers->loadFromFile("assets/towers.png"))
     {
         std::cout << "Error loading asset!\n Make sure theres assets file in the same file as Candy Defense.cpp and theres that asset in it!" << std::endl;
     }

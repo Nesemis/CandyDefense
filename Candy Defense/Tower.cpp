@@ -1,18 +1,19 @@
 #include "Tower.h"
 
 
-Tower::Tower(tArgs args, sf::Vector2f position, std::unique_ptr<sf::Texture>& texture_ ):
+Tower::Tower(tArgs args, sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ):
     Asset(position,texture_)
 {
     this->setScale(3.2f, 3.2f);
-    this->setTextureRect(sf::IntRect(64, 1, 16, 16));
+    this->setTextureRect(sf::IntRect(128, 0, 16, 16));
     t_damage = args.damage;
     t_attackSpeed = args.attackSpeed;
     t_range = args.range;
+    texture_ptr = texture_;
     t_fireTimer.restart();
 }
 
-void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies)
+void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& bullets)
 {
     // shoot at the closest target
     if (t_fireTimer.getElapsedTime().asSeconds() >= t_attackSpeed) {
@@ -28,11 +29,24 @@ void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies)
         }
      
         if (closestIndex != -1) {
+            sf::Vector2f bulletPos = sf::Vector2f(this->getPosition().x+25,this->getPosition().y+25);
+            sf::Vector2f bulletVelocity = normalize(enemies[closestIndex].get()->getPosition() - bulletPos) *700.0f;
+            bullets.emplace_back(std::make_unique<Bullet>(bulletPos, texture_ptr,bulletVelocity, t_damage ));
             t_fireTimer.restart();
         }
     }
 }
 
+sf::Vector2f Tower::normalize(sf::Vector2f vector)
+{
+    float length = std::sqrt(std::pow(vector.x, 2) + std::pow(vector.y, 2));
+    if (length != 0) {
+        return vector / length;
+    }
+    else {
+        return vector;
+    }
+}
 
 int Tower::getDamage() const
 {

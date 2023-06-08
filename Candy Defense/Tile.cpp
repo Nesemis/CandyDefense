@@ -3,7 +3,7 @@ void Tile::update(sf::Time& elapsed)
 {
 
 }
-Tile::Tile(sf::Vector2f pos, int type, std::unique_ptr<sf::Texture>& texture_)
+Tile::Tile(sf::Vector2f pos, int type, std::shared_ptr<sf::Texture>& texture_)
     : Asset(pos, texture_), type(type)
 {
     this->setTextureRect(sf::IntRect(112, 48, 31, 31));

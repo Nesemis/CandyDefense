@@ -19,8 +19,8 @@ public:
     void mainMenuUpdate();
     bool isRunning() const;
 private:
-    std::vector<std::unique_ptr<sf::Texture>> loadTextures(); 
-    std::vector<std::unique_ptr<sf::Texture>> vecTextures; // vector of textures
+    std::vector<std::shared_ptr<sf::Texture>> loadTextures();
+    std::vector<std::shared_ptr<sf::Texture>> vecTextures; // vector of textures
     std::vector<Arguments> vecArguments;
     sf::RenderWindow window;
     sf::Clock clock;

@@ -1,6 +1,6 @@
 #include "Enemy.h"
 
-Enemy::Enemy(eArgs args_, sf::Vector2f position, std::unique_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns_, std::vector<std::pair<int, int>> turnP_) :
+Enemy::Enemy(eArgs args_, sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns_, std::vector<std::pair<int, int>> turnP_) :
     Asset(position, texture_),
     args(args_),
     turns(turns_),

@@ -2,7 +2,7 @@
 //In constructor, we pass the refrence to the vector of pointers to an texture to use for the level minatures
 //It NEEDS to have an & sign here, because otherwise you would try to copy the vector,
 //That attempt would try to copy the unique pointer, and it would result a compile error 
-MainMenu::MainMenu(std::vector<std::unique_ptr<sf::Texture>>& textures) {
+MainMenu::MainMenu(std::vector<std::shared_ptr<sf::Texture>>& textures) {
     level1 = std::make_unique<Asset>(sf::Vector2f(125, 30), textures[0]);
     level2 = std::make_unique<Asset>(sf::Vector2f(125, 230), textures[1]);
     level3 = std::make_unique<Asset>(sf::Vector2f(125, 430), textures[2]);

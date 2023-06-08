@@ -2,7 +2,7 @@
 #include "Asset.h"
 class MainMenu{
 public:
-    MainMenu(std::vector<std::unique_ptr<sf::Texture>>& textures);
+    MainMenu(std::vector<std::shared_ptr<sf::Texture>>& textures);
     void render(sf::RenderWindow& window);
     void update(sf::Vector2i mouse_pos);
     bool isRunning() const;
