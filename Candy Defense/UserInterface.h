@@ -5,12 +5,12 @@
 
 class Button : public Asset {
 public:
-    Button(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::unique_ptr<sf::Font>&font_, std::string text, TowerType tt);
+    Button(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::unique_ptr<sf::Font>&font_, std::string text, TowerType towerType);
     void render(sf::RenderWindow& window);
     TowerType getTowerType();
 private:
     sf::Text buttonText;
-    TowerType towerType;
+    TowerType towerPrice;
 };
 
 

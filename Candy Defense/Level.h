@@ -23,9 +23,9 @@ private:
 	void makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void makeTurns();
 	sf::Clock e_timer;
-	int enemies = 5;
+	int enemies = 10;
 	int hp = 100;
-	int coins = 100;
+	int coins = 2000;
 	eArgs enemyArgs;
 	int level = 1;
 	int dif = 0;

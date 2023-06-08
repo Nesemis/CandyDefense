@@ -22,7 +22,7 @@ UI(textures[3]){
     //BALANCE PLACE FOR THE ENEMY STATS
     enemyArgs.hp += dif*(enemyArgs.hp*0.5)+ dif*0.5;
     enemyArgs.e_damage += dif * (enemyArgs.e_damage * 0.5)+ dif * 0.5;
-    enemyArgs.e_speed += dif * 50;
+    enemyArgs.e_speed += dif * 60;
     enemyArgs.coin_gain -= dif * (enemyArgs.coin_gain * 0.1) + dif * 1;
 
     e_timer.restart();
@@ -101,11 +101,33 @@ void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Textu
         {
             sf::FloatRect tileDim = tile.get()->getGlobalBounds();
             //price is a static element for every tower
-            if (Tower::getPrice() <= coins&&tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            switch (UI.selectedTower) {
+            case candyTower : if (100 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
             {
-                coins -= Tower::getPrice();
-                vecTowers.emplace_back(std::make_unique<Tower>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); // ### Change it to have only 2 arguments
+                coins -= 100;
+                vecTowers.emplace_back(std::make_unique<CandyTower>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); 
+                break;
             }
+            case bubblegumShot : if (300 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            {
+                coins -= 300;
+                vecTowers.emplace_back(std::make_unique<BubblegumShot>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); 
+                break;
+            }
+            case caneBlaster: if (500 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            {
+                coins -= 500;
+                vecTowers.emplace_back(std::make_unique<CaneBlaster>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                break;
+            }
+            case sweetEraser:if (1000 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
+            {
+                coins -= 1000;
+                vecTowers.emplace_back(std::make_unique<SweetEraser>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); 
+                break;
+            }
+            }
+
         };
     };
     UI.update(mouse_pos);
@@ -152,13 +174,13 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
         for (auto& tile : vecTiles)
         {
             sf::FloatRect tileDim = tile.get()->getGlobalBounds();
-            if (Tower::getPrice() <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
+            if (UI.selectedTower <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
             {
                 UI.placeRectangle.setSize(sf::Vector2f(50, 50));
                 UI.placeRectangle.setFillColor(sf::Color::Green);
                 break;
             } // If we have no money and we are on tile where we can put the tower OR if we are on the tile where we cannot put towers, change color to red
-            else if ( ((Tower::getPrice() > coins && tile.get()->type == 0 )||
+            else if ( ((UI.selectedTower > coins && tile.get()->type == 0 )||
                 (tile.get()->type == 2 || tile.get()->type == 1) )&& tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))) )
             {
                 UI.placeRectangle.setSize(sf::Vector2f(50, 50));
@@ -176,7 +198,10 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     for (auto it = vecBullets.begin(); it != vecBullets.end(); ) {
 
         (*it)->update(elapsed);
-        it++;
+        if (!it->get()->getGlobalBounds().intersects(sf::FloatRect(0, 0, 1600, 900))) 
+            it = vecBullets.erase(it);
+        else
+            it++;
     }
     // here we update the towers
     for (auto it = vecTowers.begin(); it != vecTowers.end(); ) {
