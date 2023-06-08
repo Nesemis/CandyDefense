@@ -6,6 +6,7 @@ mm(vecTextures),
 window(sf::VideoMode(1600, 900), "Candy defense"), 
 running(true){
     window.setFramerateLimit(120);
+    srand(time(NULL));
 };
 
 //It's waay better to preload textures and then give a pointer to the assets objects 

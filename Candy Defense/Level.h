@@ -26,7 +26,6 @@ private:
 	int enemies = 10;
 	int hp = 100;
 	int coins = 2000;
-	eArgs enemyArgs;
 	int level = 1;
 	int dif = 0;
 };

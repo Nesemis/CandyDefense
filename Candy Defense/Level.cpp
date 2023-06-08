@@ -19,12 +19,6 @@ UI(textures[3]){
     makeTurns(); 
     turnPoints.emplace_back(base);
 
-    //BALANCE PLACE FOR THE ENEMY STATS
-    enemyArgs.hp += dif*(enemyArgs.hp*0.5)+ dif*0.5;
-    enemyArgs.e_damage += dif * (enemyArgs.e_damage * 0.5)+ dif * 0.5;
-    enemyArgs.e_speed += dif * 60;
-    enemyArgs.coin_gain -= dif * (enemyArgs.coin_gain * 0.1) + dif * 1;
-
     e_timer.restart();
 };
 void Level::makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures)
@@ -138,11 +132,25 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     UI.update(mouse_pos_, hp, coins);
     //Spawn enemies every 2 seconds until you've reached the end of enemies counter
     int interval = 2;
-    if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
+    int randomEnemy = rand() % 3 +1;
+    switch (randomEnemy) {
+    case 1: if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
         enemies--;
-        vecEnemies.emplace_back(std::make_unique<Enemy>(enemyArgs,sf::Vector2f(100,0), textures[6], turns,turnPoints));
+        vecEnemies.emplace_back(std::make_unique<Enemy1>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
     }
+    case 2: if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
+        enemies--;
+        vecEnemies.emplace_back(std::make_unique<Enemy2>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
+        e_timer.restart();
+    }
+    case 3: if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
+        enemies--;
+        vecEnemies.emplace_back(std::make_unique<Enemy3>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
+        e_timer.restart();
+    }
+    }
+
     // here we update the enemy 
     
     for (auto it = vecEnemies.begin(); it != vecEnemies.end(); ) {
