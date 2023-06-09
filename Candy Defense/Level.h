@@ -7,6 +7,7 @@ struct Wave {
 	int e2=0;
 	int e3=0;
 	int coin_gain=0;
+	float interval = 0;
 };
 
 class Level
@@ -16,6 +17,8 @@ public:
 	void render(sf::RenderWindow& window);
 	void update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void update(sf::Time& elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos);
+	bool getHasWon();
+	bool getHasLost();
 private:
 	std::pair<int, int> base;
 	std::vector<std::pair<int, int>> path; // path for the enemies to follow
@@ -36,5 +39,7 @@ private:
 	int coins = 2000;
 	int level = 1;
 	int dif = 0;
+	bool has_won = false;
+	bool has_lost = false;
 };
 

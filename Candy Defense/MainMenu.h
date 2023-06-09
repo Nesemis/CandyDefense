@@ -6,6 +6,7 @@ public:
     void render(sf::RenderWindow& window);
     void update(sf::Vector2i mouse_pos);
     bool isRunning() const;
+    void setIsRunning(bool state);
     int getLevel() const;
     int getDif() const;
 private:

@@ -85,6 +85,10 @@ void MainMenu::update(sf::Vector2i mouse_pos) {
 bool MainMenu::isRunning() const {
     return running;
 }
+void MainMenu::setIsRunning(bool state) 
+{
+    running = state;
+}
 int MainMenu::getLevel() const {
     return level;
 };

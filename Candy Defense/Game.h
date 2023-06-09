@@ -12,11 +12,8 @@ struct Arguments {
 class Game {
 public:
     Game();
-    void createLevel();
     void render();
     void update();
-    void mainMenuRender();
-    void mainMenuUpdate();
     bool isRunning() const;
 private:
     std::vector<std::shared_ptr<sf::Texture>> loadTextures();
@@ -27,6 +24,12 @@ private:
     sf::Time elapsed;
     std::unique_ptr<Level> level;
     bool running = true;
+    void makeWS();
+    void makeLS();
+    void createLevel();
+    void mainMenuRender();
+    void mainMenuUpdate();
+
 public:
     MainMenu mm;
 };

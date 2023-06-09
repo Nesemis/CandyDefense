@@ -68,49 +68,120 @@ std::vector<std::shared_ptr<sf::Texture>> Game::loadTextures() {
     temp.emplace_back(std::move(towers));
     return temp;
 };
+void Game::makeWS()
+{
+    sf::Clock WSClock;
+    sf::Text WSText;
+    sf::Font kalam;
+    if (!kalam.loadFromFile("fonts/Kalam-Regular.ttf"))//checking if we loaded the font
+    {
+        std::cout << "Error loading Kalam Font!\n Make sure theres fonts file in the same file as main.cpp and theres Kalam-Regular.ttf in it!" << std::endl;
+    }
+    WSText.setPosition(sf::Vector2f(650, 300));
+    WSText.setFont(kalam);
+    WSText.setString("YOU WIN!");
+    WSText.setOutlineColor(sf::Color::White);
+    WSText.setCharacterSize(70);
+    WSText.setOutlineThickness(1);
+    WSClock.restart();
+    while (WSClock.getElapsedTime().asSeconds() < 2)
+    {
+        window.clear(sf::Color::Black);
+        window.draw(WSText);
+        window.display();
+    }
+    level.reset();
+    mm.setIsRunning(true);
+}
+void Game::makeLS()
+{
+    sf::Clock LSClock;
+    sf::Text LSText;
+    sf::Font kalam;
+    if (!kalam.loadFromFile("fonts/Kalam-Regular.ttf"))//checking if we loaded the font
+    {
+        std::cout << "Error loading Kalam Font!\n Make sure theres fonts file in the same file as main.cpp and theres Kalam-Regular.ttf in it!" << std::endl;
+    }
+    LSText.setPosition(sf::Vector2f(650, 300));
+    LSText.setFont(kalam);
+    LSText.setString("GAME OVER");
+    LSText.setOutlineColor(sf::Color::White);
+    LSText.setCharacterSize(70);
+    LSText.setOutlineThickness(1);
+    LSClock.restart();
+    while (LSClock.getElapsedTime().asSeconds() < 2)
+    {
+        window.clear(sf::Color::Black);
+        window.draw(LSText);
+        window.display();
+    }
+    level.reset();
+    mm.setIsRunning(true);
+}
 void Game::createLevel() {
     level = std::make_unique<Level>(vecTextures,mm.getLevel(),mm.getDif());
 };
 
 void Game::render() {
     window.clear(sf::Color::Black);
-    level.get()->render(window);
+    if (mm.isRunning())
+    {
+        mainMenuRender();
+    }
+    else if(level != nullptr)
+    {
+        level.get()->render(window);
+    }
     window.display();
 }
 
 void Game::update() {
-    elapsed = clock.restart();
-    sf::Event event;
-    sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
-    while (window.pollEvent(event)) {
+    if (!mm.isRunning() && level!=nullptr)
+    {
+        elapsed = clock.restart();
+        sf::Event event;
+        sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+        while (window.pollEvent(event)) {
 
-        if (event.type == sf::Event::Closed)
-        {
-            running = false;
-            window.close();
-        }
-        if (event.type == sf::Event::MouseButtonPressed) {
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                mouse_pos = sf::Mouse::getPosition(window);
-                level.get()->update(mouse_pos, vecTextures);
+            if (event.type == sf::Event::Closed)
+            {
+                running = false;
+                window.close();
             }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    mouse_pos = sf::Mouse::getPosition(window);
+                    level.get()->update(mouse_pos, vecTextures);
+                }
+            }
+
+
         }
-
-
+        level.get()->update(elapsed, vecTextures, mouse_pos); 
+        if (level.get()->getHasWon())
+        {
+            makeWS();
+        }
+        if (level !=nullptr&&level.get()->getHasLost())
+        {
+            makeLS();
+        }
     }
-    level.get()->update(elapsed, vecTextures,mouse_pos);
+    else if (level == nullptr&&mm.isRunning())
+    {
+        mainMenuUpdate();
+    }
+    else {
+        createLevel();
+    }
+   
 }
 
-//Two methods here are for render & update mainMenu
-//I found this divison of methods as neccesery , 
-//becasue if we want to just have two methods in main loop, 
-//that means we would need to check if the MainMenu exist or somehow,
-//EVERY FRAME, so that would be unoptimal
-//Istead, another while loop, just a bunch more lines of code, and it even adds more readibility
+// I dont know how else could I check, and yet I want to the game to return to main menu
+// So I did it the way i didn't itend to
 void Game::mainMenuRender() {
     window.clear(sf::Color::Black);
     mm.render(window);
-    window.display();
 };
 void Game::mainMenuUpdate() {
     sf::Event event;

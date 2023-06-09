@@ -86,10 +86,11 @@ void Level::makeTurns() {
 }
 void Level::makeWaves()
 {
-    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 }));
-    vecWaves.emplace_back(Wave({ 3, 1, 1, 200 }));
-    vecWaves.emplace_back(Wave({ 3, 2, 2, 0 }));
-};
+    vecWaves.emplace_back(Wave({ 1, 0, 0 }));
+    //vecWaves.emplace_back(Wave({ 3, 1, 1, 200 }));
+   // vecWaves.emplace_back(Wave({ 3, 2, 2, 0 }));
+}
+
 
 void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures_){
     //This update is called when the game notices the player input, it is only called in event section 
@@ -119,7 +120,10 @@ void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Textu
                     bool allGreen = true;
                     for (int i = 0; i < caneBlasterS; i++) {
                         for (int j = 0; j < caneBlasterS; j++) {
-                            //The same logic but with 3  tiles
+                            // We calculate the index of the tiles to the right and down
+                            // makeTiles generates tiles verticaly, column to column
+                            // so if we want to access tile down, we need to add 1
+                            // if we want to acces tile to the right, we need to go 14 tiles
                             int index = it - vecTiles.begin() + (i * 14) + j;
                             if (index < vecTiles.size())
                             {
@@ -184,7 +188,7 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     //Update every frame
     UI.update(mouse_pos_, hp, coins,wave);
     //Spawn enemies every 2 seconds until you've reached the end of wave enemies counter
-    int interval = 2;
+    int interval = 1;
     //Optimize randomness to not random the enemy that wont spawn in this wave
     int randomEnemy = 0;
     int nonZeroEnemiesCount = 0;
@@ -221,7 +225,8 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     }
     else if(vecEnemies.empty())
     {
-        std::cout << "YOU WIN!\n";
+        has_won = true;
+        return;
     }
 
 
@@ -260,7 +265,7 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
                  hp -= (*it)->getDamage();
                  if (hp < 0)
                  {
-                     // Do something here if the player looses 
+                     has_lost = true;
                      break;
                  }
             it = vecEnemies.erase(it);
@@ -339,7 +344,16 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
 
     
 
-};
+}
+bool Level::getHasWon()
+{
+    return has_won;
+}
+bool Level::getHasLost()
+{
+    return has_lost;
+}
+;
 void Level::render(sf::RenderWindow& window) {
     //All assets are derived form a single class, so they all use the same method, convenient
     for (const auto& tile : vecTiles) {
