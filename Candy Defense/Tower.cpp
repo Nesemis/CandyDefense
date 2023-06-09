@@ -62,6 +62,11 @@ float Tower::getAttackSpeed()
     return t_price;
 }
 
+ int Tower::getSize()
+ {
+     return t_size;
+ }
+
 float Tower::getDistance(sf::Vector2f v1, sf::Vector2f v2)
 {
     return std::sqrt(std::pow(v2.x - v1.x, 2) + std::pow(v2.y - v1.y, 2));
@@ -69,7 +74,8 @@ float Tower::getDistance(sf::Vector2f v1, sf::Vector2f v2)
 
 CandyTower::CandyTower(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture) :
     Tower(position, texture) {
-    this->setScale(3.2f, 3.2f);
+    t_size = 1;
+    this->setScale(3.2f*t_size, 3.2f * t_size);
     this->setTextureRect(sf::IntRect(128, 0, 16, 16));
     texture_ptr = texture;
     t_damage = 2;
@@ -79,7 +85,8 @@ CandyTower::CandyTower(sf::Vector2f position, std::shared_ptr<sf::Texture>& text
 };
 BubblegumShot::BubblegumShot(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture) :
     Tower(position, texture) {
-    this->setScale(3.2f, 3.2f);
+    t_size = 1;
+    this->setScale(3.2f * t_size, 3.2f * t_size);
     this->setTextureRect(sf::IntRect(64, 1, 16, 16));
     texture_ptr = texture;
     t_damage = 5;
@@ -89,17 +96,20 @@ BubblegumShot::BubblegumShot(sf::Vector2f position, std::shared_ptr<sf::Texture>
 };
 CaneBlaster::CaneBlaster(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture) :
     Tower(position, texture) {
-    this->setScale(3.0f, 3.0f);
+    t_size = 2;
+    this->setScale(3.0f * t_size, 3.0f * t_size);
     this->setTextureRect(sf::IntRect(128, 80, 16, 16));
     texture_ptr = texture;
     t_damage = 6;
     t_attackSpeed = 0.5;
     t_range = 300;
-    t_price = 1000;
+    t_price = 500;
+
 };
 SweetEraser::SweetEraser(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture) :
     Tower(position, texture) {
-    this->setScale(3.0f, 3.0f);
+    t_size = 3;
+    this->setScale(3.0f * t_size, 3.0f* t_size);
     this->setTextureRect(sf::IntRect(64, 80, 16, 16));
     texture_ptr = texture;
     t_damage = 14;

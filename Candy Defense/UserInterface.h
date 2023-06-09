@@ -5,12 +5,14 @@
 
 class Button : public Asset {
 public:
-    Button(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::unique_ptr<sf::Font>&font_, std::string text, TowerType towerType);
+    Button(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::unique_ptr<sf::Font>&font_, std::string text, TowerPrice towerType, TowerSize towerSize);
     void render(sf::RenderWindow& window);
-    TowerType getTowerType();
+    TowerPrice getTowerPrice();
+    TowerSize getTowerSize();
 private:
     sf::Text buttonText;
-    TowerType towerPrice;
+    TowerPrice towerPrice;
+    TowerSize towerSize;
 };
 
 
@@ -22,7 +24,8 @@ public:
     void render(sf::RenderWindow& window);
     bool getPlaceMode();
     sf::RectangleShape placeRectangle;
-    TowerType selectedTower;
+    TowerPrice selectedTowerP;
+    TowerSize selectedTowerS;
 private:
     std::unique_ptr<sf::Font> font;
     std::vector<std::unique_ptr<sf::Text>> UItext;

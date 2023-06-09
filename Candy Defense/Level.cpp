@@ -97,39 +97,86 @@ void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Textu
     if (UI.getPlaceMode())
     {
 
-        for (auto& tile : vecTiles)
-        {
-            sf::FloatRect tileDim = tile.get()->getGlobalBounds();
-            //price is a static element for every tower
-            switch (UI.selectedTower) {
-            case candyTower : if (100 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
-            {
-                coins -= 100;
-                vecTowers.emplace_back(std::make_unique<CandyTower>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); 
-                break;
-            }
-            case bubblegumShot : if (300 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
-            {
-                coins -= 300;
-                vecTowers.emplace_back(std::make_unique<BubblegumShot>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); 
-                break;
-            }
-            case caneBlaster: if (500 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
-            {
-                coins -= 500;
-                vecTowers.emplace_back(std::make_unique<CaneBlaster>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
-                break;
-            }
-            case sweetEraser:if (1000 <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y))))
-            {
-                coins -= 1000;
-                vecTowers.emplace_back(std::make_unique<SweetEraser>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7])); 
-                break;
-            }
-            }
+        for (auto it = vecTiles.begin(); it != vecTiles.end(); it++) {
+            sf::FloatRect tileDim = (*it).get()->getGlobalBounds();
+            // Check if you can put a tower here
 
-        };
-    };
+            switch (UI.selectedTowerP) {
+            case candyTowerP:
+                if (100 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
+                    coins -= 100;
+                    vecTowers.emplace_back(std::make_unique<CandyTower>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                }
+                break;
+            case bubblegumShotP:
+                if (300 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
+                    coins -= 300;
+                    vecTowers.emplace_back(std::make_unique<BubblegumShot>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                }
+                break;
+            case caneBlasterP:
+                if (500 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
+                    bool allGreen = true;
+                    for (int i = 0; i < caneBlasterS; i++) {
+                        for (int j = 0; j < caneBlasterS; j++) {
+                            //The same logic but with 3  tiles
+                            int index = it - vecTiles.begin() + (i * 14) + j;
+                            if (index < vecTiles.size())
+                            {
+                                auto tile_it = it + (i * 14) + j;
+                                if (((*tile_it).get()->type != 0)|| j!=0 && index %14 ==0) { // check if we go on the UI
+                                    allGreen = false;
+                                    break;
+                                }
+                            }
+                            else {
+                                allGreen = false;
+                                break;
+                            }
+                        }
+                        if (!allGreen) {
+                            break;
+                        }
+                    }
+                    if (allGreen) {
+                        coins -= 500;
+                        vecTowers.emplace_back(std::make_unique<CaneBlaster>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                    }
+                }
+                break;
+            case sweetEraserP:
+                if (1000 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
+                    bool allGreen = true;
+                    for (int i = 0; i < sweetEraserS; i++) {
+                        for (int j = 0; j < sweetEraserS; j++) {
+                            //The same logic but with 3  tiles
+                            int index = it - vecTiles.begin() + (i*14) + j;
+                            if (index < vecTiles.size())
+                            {
+                                auto tile_it = it + (i * 14) + j;
+                                if (((*tile_it).get()->type != 0) || j != 0 && index % 14 == 0) {
+                                    allGreen = false;
+                                    break;
+                                }
+                            }
+                            else {
+                                allGreen = false;
+                                break;
+                            }
+                        }
+                        if (!allGreen) {
+                            break;
+                        }
+                    }
+                    if (allGreen) {
+                        coins -= 1000;
+                        vecTowers.emplace_back(std::make_unique<SweetEraser>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                    }
+                }
+                break;
+            }
+        }
+    }
     UI.update(mouse_pos);
     
 };
@@ -232,19 +279,38 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     //Control the place rectangle
     if (UI.getPlaceMode())
     {
-        for (auto& tile : vecTiles)
+        for (auto it = vecTiles.begin(); it != vecTiles.end(); ++it)
         {
-            sf::FloatRect tileDim = tile.get()->getGlobalBounds();
-            if (UI.selectedTower <= coins && tile.get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
+            sf::FloatRect tileDim = (*it).get()->getGlobalBounds();
+            bool allGreen = true;
+           for (int i = 0; i < UI.selectedTowerS; i++) {
+                for (int j = 0; j < UI.selectedTowerS; j++) {
+                    int index = (it - vecTiles.begin()) + (i * 14) + j;
+                    if (index < vecTiles.size())
+                    {
+                        auto tile_it = it + (i * 14) + j ;
+                        if (((*tile_it).get()->type != 0) || j != 0 && index % 14 == 0) { // check if we go on the UI
+                            allGreen = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        allGreen = false;
+                        break;
+                    }
+                }
+            }
+            if (UI.selectedTowerP <= coins && allGreen && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))))
             {
-                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
+                UI.placeRectangle.setSize(sf::Vector2f(50*UI.selectedTowerS,50 * UI.selectedTowerS));
                 UI.placeRectangle.setFillColor(sf::Color::Green);
                 break;
             } // If we have no money and we are on tile where we can put the tower OR if we are on the tile where we cannot put towers, change color to red
-            else if ( ((UI.selectedTower > coins && tile.get()->type == 0 )||
-                (tile.get()->type == 2 || tile.get()->type == 1) )&& tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))) )
+            else if (((UI.selectedTowerP > coins && allGreen )||
+                (!allGreen) )&& tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos_.x), static_cast<float>(mouse_pos_.y))) )
             {
-                UI.placeRectangle.setSize(sf::Vector2f(50, 50));
+                UI.placeRectangle.setSize(sf::Vector2f(50 * UI.selectedTowerS, 50 * UI.selectedTowerS));
                 UI.placeRectangle.setFillColor(sf::Color::Red);
                 break;
             }

@@ -33,7 +33,7 @@ private:
 	sf::Clock e_timer;
 	int wave = 0;
 	int hp = 100;
-	int coins = 100;
+	int coins = 2000;
 	int level = 1;
 	int dif = 0;
 };

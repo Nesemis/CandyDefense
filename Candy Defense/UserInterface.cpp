@@ -1,8 +1,9 @@
 #include "UserInterface.h"
 
-Button::Button( sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ,std::unique_ptr<sf::Font> &font_,  std::string text, TowerType towerPrice_)
+Button::Button( sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_ ,std::unique_ptr<sf::Font> &font_,  std::string text, TowerPrice towerPrice_, TowerSize towerSize_)
     : Asset(position, texture_),
-    towerPrice(towerPrice_){
+    towerPrice(towerPrice_),
+    towerSize(towerSize_){
     this->setTextureRect(sf::IntRect(64, 48, 48, 16));
     this->setScale(3.5f, 3.5f);
     buttonText.setFont(*font_);
@@ -26,9 +27,14 @@ void Button::render(sf::RenderWindow& window) {
     window.draw(buttonText);
 }
 
-TowerType Button::getTowerType()
+TowerPrice Button::getTowerPrice()
 {
     return towerPrice;
+}
+
+TowerSize Button::getTowerSize()
+{
+    return towerSize;
 }
 
 
@@ -49,10 +55,10 @@ UserInterface::UserInterface(std::shared_ptr<sf::Texture>& texture_){
 
     // create buttons for UI
 
-    buttons.emplace_back(sf::Vector2f(200, 720), texture_, font, "Candy Tower", TowerType::candyTower);
-    buttons.emplace_back(sf::Vector2f(550, 720), texture_, font, "Bubblegum shot", TowerType::bubblegumShot);
-    buttons.emplace_back(sf::Vector2f(900, 720), texture_, font, "Cane Blaster", TowerType::caneBlaster);
-    buttons.emplace_back(sf::Vector2f(1250, 720), texture_, font, "Sweet Eraser", TowerType::sweetEraser);
+    buttons.emplace_back(sf::Vector2f(200, 720), texture_, font, "Candy Tower", TowerPrice::candyTowerP, TowerSize::candyTowerS);
+    buttons.emplace_back(sf::Vector2f(550, 720), texture_, font, "Bubblegum shot", TowerPrice::bubblegumShotP, TowerSize::bubblegumShotS);
+    buttons.emplace_back(sf::Vector2f(900, 720), texture_, font, "Cane Blaster", TowerPrice::caneBlasterP, TowerSize::caneBlasterS);
+    buttons.emplace_back(sf::Vector2f(1250, 720), texture_, font, "Sweet Eraser", TowerPrice::sweetEraserP, TowerSize::sweetEraserS);
 
     // create text to diplay, for only 4 buttons lets do it manually
     std::unique_ptr<sf::Text> hp = std::make_unique<sf::Text>();
@@ -135,7 +141,8 @@ void UserInterface::update(sf::Vector2i mouse_pos) {
     for (i; i < buttons.size();i++) {
         if (buttons[i].getGlobalBounds().contains(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))
         {
-            selectedTower = buttons[i].getTowerType();
+            selectedTowerP = buttons[i].getTowerPrice();
+            selectedTowerS = buttons[i].getTowerSize();
             placeModeOn = true;
             break;
         };
