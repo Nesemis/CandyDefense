@@ -72,7 +72,7 @@ CandyTower::CandyTower(sf::Vector2f position, std::shared_ptr<sf::Texture>& text
     this->setScale(3.2f, 3.2f);
     this->setTextureRect(sf::IntRect(128, 0, 16, 16));
     texture_ptr = texture;
-    t_damage = 1;
+    t_damage = 2;
     t_attackSpeed = 1;
     t_range = 150;
     t_price = 100;
@@ -82,7 +82,7 @@ BubblegumShot::BubblegumShot(sf::Vector2f position, std::shared_ptr<sf::Texture>
     this->setScale(3.2f, 3.2f);
     this->setTextureRect(sf::IntRect(64, 1, 16, 16));
     texture_ptr = texture;
-    t_damage = 2;
+    t_damage = 5;
     t_attackSpeed = 1;
     t_range = 250;
     t_price = 300;
@@ -92,7 +92,7 @@ CaneBlaster::CaneBlaster(sf::Vector2f position, std::shared_ptr<sf::Texture>& te
     this->setScale(3.0f, 3.0f);
     this->setTextureRect(sf::IntRect(128, 80, 16, 16));
     texture_ptr = texture;
-    t_damage = 3;
+    t_damage = 6;
     t_attackSpeed = 0.5;
     t_range = 300;
     t_price = 1000;
@@ -102,7 +102,7 @@ SweetEraser::SweetEraser(sf::Vector2f position, std::shared_ptr<sf::Texture>& te
     this->setScale(3.0f, 3.0f);
     this->setTextureRect(sf::IntRect(64, 80, 16, 16));
     texture_ptr = texture;
-    t_damage = 7;
+    t_damage = 14;
     t_attackSpeed =0.5;
     t_range = 300;
     t_price = 1000;

@@ -18,7 +18,7 @@ UI(textures[3]){
     turns.emplace_back(v0);
     makeTurns(); 
     turnPoints.emplace_back(base);
-
+    makeWaves();
     e_timer.restart();
 };
 void Level::makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures)
@@ -83,6 +83,12 @@ void Level::makeTurns() {
     }
     
 
+}
+void Level::makeWaves()
+{
+    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 }));
+    vecWaves.emplace_back(Wave({ 3, 1, 1, 200 }));
+    vecWaves.emplace_back(Wave({ 3, 2, 2, 0 }));
 };
 
 void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures_){
@@ -129,25 +135,72 @@ void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Textu
 };
 void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos_) {
     //Update every frame
-    UI.update(mouse_pos_, hp, coins);
-    //Spawn enemies every 2 seconds until you've reached the end of enemies counter
+    UI.update(mouse_pos_, hp, coins,wave);
+    //Spawn enemies every 2 seconds until you've reached the end of wave enemies counter
     int interval = 2;
-    int randomEnemy = rand() % 3 +1;
+    //Optimize randomness to not random the enemy that wont spawn in this wave
+    int randomEnemy = 0;
+    int nonZeroEnemiesCount = 0;
+
+    if (vecWaves[wave].e1 != 0) {
+        nonZeroEnemiesCount++;
+    }
+    if (vecWaves[wave].e2 != 0) {
+        nonZeroEnemiesCount++;
+    }
+    if (vecWaves[wave].e3 != 0) {
+        nonZeroEnemiesCount++;
+    }
+
+    if (nonZeroEnemiesCount > 0) {
+        int randomIndex = rand() % nonZeroEnemiesCount;
+
+        do {
+            randomEnemy++;
+            if (vecWaves[wave].e1 != 0 && randomEnemy == 1) {
+                randomIndex--;
+            }
+            if (vecWaves[wave].e2 != 0 && randomEnemy == 2) {
+                randomIndex--;
+            }
+            if (vecWaves[wave].e3 != 0 && randomEnemy == 3) {
+                randomIndex--;
+            }
+        } while (randomIndex >= 0);
+    }
+    else if (wave < vecWaves.size()-1){
+        coins += vecWaves[wave].coin_gain;
+        wave++;
+    }
+    else if(vecEnemies.empty())
+    {
+        std::cout << "YOU WIN!\n";
+    }
+
+
+
+
+
+    //Spawn the random enemy
     switch (randomEnemy) {
-    case 1: if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
-        enemies--;
+    case 0: e_timer.restart();
+    case 1: if (e_timer.getElapsedTime().asSeconds() >= interval) {
+        vecWaves[wave].e1--;
         vecEnemies.emplace_back(std::make_unique<Enemy1>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
+        break;
     }
-    case 2: if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
-        enemies--;
+   case 2: if (e_timer.getElapsedTime().asSeconds() >= interval ) {
+        vecWaves[wave].e2--;
         vecEnemies.emplace_back(std::make_unique<Enemy2>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
+        break;
     }
-    case 3: if (e_timer.getElapsedTime().asSeconds() >= interval && enemies != 0) {
-        enemies--;
+    case 3: if (e_timer.getElapsedTime().asSeconds() >= interval ) {
+        vecWaves[wave].e3--;
         vecEnemies.emplace_back(std::make_unique<Enemy3>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
+        break;
     }
     }
 

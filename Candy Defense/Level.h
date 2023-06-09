@@ -2,6 +2,13 @@
 #include "Asset.h"
 #include "Tile.h"
 #include "UserInterface.h"
+struct Wave {
+	int e1=0;
+	int e2=0;
+	int e3=0;
+	int coin_gain=0;
+};
+
 class Level
 {
 public:
@@ -14,7 +21,7 @@ private:
 	std::vector<std::pair<int, int>> path; // path for the enemies to follow
 	std::vector<std::pair<int, int>> turns; // Turn scalars  for the enemies pathfinding
 	std::vector<std::pair<int, int>> turnPoints; // Turn points where enemies will change velocity
-
+	std::vector<Wave> vecWaves;
 	std::vector<std::unique_ptr<Tower>> vecTowers;
 	std::vector<std::unique_ptr<Enemy>> vecEnemies;
 	std::vector<std::unique_ptr<Tile>> vecTiles;
@@ -22,10 +29,11 @@ private:
 	UserInterface UI;
 	void makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void makeTurns();
+	void makeWaves();
 	sf::Clock e_timer;
-	int enemies = 10;
+	int wave = 0;
 	int hp = 100;
-	int coins = 2000;
+	int coins = 100;
 	int level = 1;
 	int dif = 0;
 };

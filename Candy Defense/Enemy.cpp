@@ -84,10 +84,10 @@ Enemy1::Enemy1(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     textureRect = sf::IntRect(65, 49, 14, 14);
     this->setTextureRect(textureRect);
     //BALANCE PLACE FOR THE ENEMY1 STATS
-    e_hp = 2 + dif * (2 * 0.5) + dif * 0.5;
+    e_hp = 3 + dif * (3* 0.5) + dif * 0.5;
     e_damage = 2+ dif * (2 * 0.5) + dif * 0.5;
-    e_speed = 200 + dif * 60;
-    coin_gain = 20 - dif * (100 * 0.1) - dif * 1;
+    e_speed = 180 + dif * 40;
+    coin_gain = 20 - dif * (20 * 0.3) - dif * 1;
 }
 
 Enemy2::Enemy2(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif) :
@@ -96,10 +96,10 @@ Enemy2::Enemy2(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     textureRect = sf::IntRect(65, 18, 16, 15);
     this->setTextureRect(textureRect);
     //BALANCE PLACE FOR THE ENEMY2 STATS
-    e_hp = 2 + dif * (1 * 0.5) + dif * 0.5;
-    e_damage = 1 + dif * (1 * 0.5) + dif * 0.5;
-    e_speed = 300 + dif * 60;
-    coin_gain = 25 - dif * (100 * 0.1) - dif * 1;
+    e_hp = 2 + dif * (2* 0.5) + dif * 0.5;
+    e_damage = 2 + dif * (2 * 0.5) + dif * 0.5;
+    e_speed = 270 + dif * 50;
+    coin_gain = 25 - dif * (25 * 0.3) - dif * 1;
 }
 
 Enemy3::Enemy3(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif) :
@@ -108,8 +108,8 @@ Enemy3::Enemy3(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     textureRect = sf::IntRect(64,33, 16, 16);
     this->setTextureRect(textureRect);
     //BALANCE PLACE FOR THE ENEMY3 STATS
-    e_hp = 5 + dif * (4 * 0.5) + dif * 0.5;
-    e_damage = 5 + dif * (4 * 0.5) + dif * 0.5;
-    e_speed = 50 + dif * 60;
-    coin_gain = 50 - dif * (100 * 0.1) - dif * 1;
+    e_hp = 10 + dif * (10 * 0.5) + dif * 0.5;
+    e_damage = 5 + dif * (5 * 0.5) + dif * 0.5;
+    e_speed = 100 + dif * 25;
+    coin_gain = 50 - dif * (50 * 0.3) - dif * 1;
 }

@@ -68,9 +68,11 @@ UserInterface::UserInterface(std::shared_ptr<sf::Texture>& texture_){
     (*coins).setFillColor(sf::Color::Yellow);
     (*coins).setPosition(sf::Vector2f(50, 840));
     std::unique_ptr<sf::Text> waves = std::make_unique<sf::Text>();
-    (*waves).setString("5");
+    (*waves).setString("Wave: 1");
     (*waves).setFont(*font);
-
+    (*waves).setCharacterSize(30);
+    (*waves).setFillColor(sf::Color::Red);
+    (*waves).setPosition(sf::Vector2f(1450, 810));
     std::unique_ptr<sf::Text> towerPrice = std::make_unique<sf::Text>();
     (*towerPrice).setString("100");
     (*towerPrice).setFont(*font);
@@ -145,12 +147,13 @@ void UserInterface::update(sf::Vector2i mouse_pos) {
         //Place the rectangle or cancel the placement
     }
 }
-void UserInterface::update(sf::Vector2i mouse_pos, int& hp, int& coins) {
+void UserInterface::update(sf::Vector2i mouse_pos, int& hp, int& coins, int&waves) {
 
     //Constantly update the position of mouse if its in place mode
     //At first, update the strings
     UItext[0].get()->setString("HP: " + std::to_string(hp));
     UItext[1].get()->setString("Coins: " + std::to_string(coins));
+    UItext[2].get()->setString("Wave: " + std::to_string(waves+1));
     if (placeModeOn) {
         //Set position of the square to the tile where the mouse is on
         int x = mouse_pos.x - mouse_pos.x%50;
