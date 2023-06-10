@@ -144,6 +144,7 @@ void Game::render() {
 void Game::update() {
     if (!mm.isRunning() && level!=nullptr)
     {
+        std::cout << 1/elapsed.asSeconds() << std::endl;
         elapsed = clock.restart();
         sf::Event event;
         sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
@@ -206,7 +207,7 @@ void Game::update() {
     else {
         createLevel();
     }
-   
+    
 }
 
 // I dont know how else could I check, and yet I want to the game to return to main menu

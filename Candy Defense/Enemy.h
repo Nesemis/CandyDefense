@@ -21,8 +21,10 @@ protected:
     bool reachedTarget = false;
     bool is_dead = false;
     int currentTurn = 0; // Int to know which velocity to take
+    int currentFrame = 0; // Int to know which frame to display
     sf::IntRect textureRect;
     float getDistance(sf::Vector2f v1, sf::Vector2f v2);
+    void updateAnimation(int time);
 };
 class Enemy1 : public Enemy
 {

@@ -44,8 +44,8 @@ void Enemy::update(sf::Time& elapsed, std::vector<std::unique_ptr<Bullet>>& bull
             }
         }
     }
-
-
+    
+   updateAnimation(elapsed.asMilliseconds());
 
 }
 
@@ -77,6 +77,22 @@ float Enemy::getDistance(sf::Vector2f v1, sf::Vector2f v2)
 {
     return static_cast<float>(std::sqrt(std::pow(v2.x - v1.x, 2) + std::pow(v2.y - v1.y, 2)));
 }
+
+void Enemy::updateAnimation(int time)
+{
+    
+    static int frameTime = 0;
+    frameTime += time;
+    if (frameTime >= 700)
+    {
+        frameTime -= 700;
+        currentFrame = (currentFrame + 1) % 4;
+    }
+
+    this->setTextureRect(sf::IntRect(currentFrame * 16 + 65, 18, 16, 15));
+}
+
+
 
 Enemy1::Enemy1(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif):
     Enemy(position, texture_, turns, turnP, dif)
