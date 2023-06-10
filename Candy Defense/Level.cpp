@@ -86,13 +86,26 @@ void Level::makeTurns() {
 }
 void Level::makeWaves()
 {
-    vecWaves.emplace_back(Wave({ 1, 0, 0 }));
-    //vecWaves.emplace_back(Wave({ 3, 1, 1, 200 }));
-   // vecWaves.emplace_back(Wave({ 3, 2, 2, 0 }));
+    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 ,2}));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,1}));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,2}));
+    vecWaves.emplace_back(Wave({ 15, 2, 1, 200 ,1}));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,1}));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,0.5}));
+    vecWaves.emplace_back(Wave({ 20, 8, 5, 300 ,1}));
+    vecWaves.emplace_back(Wave({ 0, 15, 0, 400 ,1}));
+    vecWaves.emplace_back(Wave({ 20, 5, 5, 400 ,1}));
+    vecWaves.emplace_back(Wave({ 0, 0, 15, 0 ,0.5}));
 }
 
+void Level::update(sf::Keyboard::Key key, std::vector<std::shared_ptr<sf::Texture>>& textures)
+{
+    //This update is called when the game notices the player input, it is only called in event section 
+    //IT WORKS ONLY ON MOUSE BUTTON PRESS
+    UI.update(key);
+};
 
-void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures_){
+void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Texture>>& textures_){
     //This update is called when the game notices the player input, it is only called in event section 
     //IT WORKS ONLY ON CLICK
     if (UI.getPlaceMode())
@@ -187,8 +200,7 @@ void Level::update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Textu
 void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos_) {
     //Update every frame
     UI.update(mouse_pos_, hp, coins,wave);
-    //Spawn enemies every 2 seconds until you've reached the end of wave enemies counter
-    int interval = 1;
+
     //Optimize randomness to not random the enemy that wont spawn in this wave
     int randomEnemy = 0;
     int nonZeroEnemiesCount = 0;
@@ -232,23 +244,22 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
 
 
 
-
-    //Spawn the random enemy
+    //Spawn random enemies every time given by the wave vector
     switch (randomEnemy) {
     case 0: e_timer.restart();
-    case 1: if (e_timer.getElapsedTime().asSeconds() >= interval) {
+    case 1: if (e_timer.getElapsedTime().asSeconds() >= vecWaves[wave].interval) {
         vecWaves[wave].e1--;
         vecEnemies.emplace_back(std::make_unique<Enemy1>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
         break;
     }
-   case 2: if (e_timer.getElapsedTime().asSeconds() >= interval ) {
+   case 2: if (e_timer.getElapsedTime().asSeconds() >= vecWaves[wave].interval) {
         vecWaves[wave].e2--;
         vecEnemies.emplace_back(std::make_unique<Enemy2>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
         break;
     }
-    case 3: if (e_timer.getElapsedTime().asSeconds() >= interval ) {
+    case 3: if (e_timer.getElapsedTime().asSeconds() >= vecWaves[wave].interval) {
         vecWaves[wave].e3--;
         vecEnemies.emplace_back(std::make_unique<Enemy3>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
         e_timer.restart();
@@ -369,4 +380,4 @@ void Level::render(sf::RenderWindow& window) {
         bullet.get()->draw(window);
     }
     UI.render(window);
-};
+}

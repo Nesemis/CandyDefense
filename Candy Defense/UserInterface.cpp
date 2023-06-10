@@ -134,6 +134,36 @@ UserInterface::UserInterface(std::shared_ptr<sf::Texture>& texture_){
     UItext.emplace_back(std::move(eraserPrice));
 }
 
+void UserInterface::update(sf::Keyboard::Key key)
+{
+    switch (key) {
+    case sf::Keyboard::C: {
+        selectedTowerP = candyTowerP;
+        selectedTowerS = candyTowerS;
+        placeModeOn = true;
+        break;
+    }
+    case sf::Keyboard::B: {
+        selectedTowerP = bubblegumShotP;
+        selectedTowerS = bubblegumShotS;
+        placeModeOn = true;
+        break;
+    }
+    case sf::Keyboard::E: {
+        selectedTowerP = sweetEraserP;
+        selectedTowerS = sweetEraserS;
+        placeModeOn = true;
+        break;
+    }
+    case sf::Keyboard::T: {
+        selectedTowerP = caneBlasterP;
+        selectedTowerS = caneBlasterS;
+        placeModeOn = true;
+        break;
+    }
+    }
+}
+
 void UserInterface::update(sf::Vector2i mouse_pos) {
     // The partial update (only when the player click
     // Search trough all buttons and if it was clicked turn on place mode

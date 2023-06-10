@@ -141,6 +141,7 @@ void Game::update() {
         elapsed = clock.restart();
         sf::Event event;
         sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+        sf::Keyboard::Key key;
         while (window.pollEvent(event)) {
 
             if (event.type == sf::Event::Closed)
@@ -154,6 +155,31 @@ void Game::update() {
                     level.get()->update(mouse_pos, vecTextures);
                 }
             }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::C) {
+                    key = sf::Keyboard::C;
+                    level.get()->update(key, vecTextures);
+                }
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::B) {
+                    key = sf::Keyboard::B;
+                    level.get()->update(key, vecTextures);
+                }
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::T) {
+                    key = sf::Keyboard::T;
+                    level.get()->update(key, vecTextures);
+                }
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::E) {
+                    key = sf::Keyboard::E;
+                    level.get()->update(key, vecTextures);
+                }
+            }
+            
 
 
         }

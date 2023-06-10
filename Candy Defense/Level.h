@@ -15,6 +15,7 @@ class Level
 public:
 	Level(std::vector<std::shared_ptr<sf::Texture>>& textures, int level, int dif);
 	void render(sf::RenderWindow& window);
+	void update(sf::Keyboard::Key key, std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void update(sf::Time& elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos);
 	bool getHasWon();

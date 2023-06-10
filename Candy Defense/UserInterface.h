@@ -19,6 +19,7 @@ private:
 class UserInterface {
 public:
     UserInterface(std::shared_ptr<sf::Texture>& texture_);
+    void update(sf::Keyboard::Key key); // Update when the buttton pressed
     void update(sf::Vector2i mouse_pos); // Update when the mouse is clicked
     void update(sf::Vector2i mouse_pos, int& hp, int& coins, int&wave); // Update constant
     void render(sf::RenderWindow& window);

@@ -84,7 +84,7 @@ Enemy1::Enemy1(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     textureRect = sf::IntRect(65, 49, 14, 14);
     this->setTextureRect(textureRect);
     //BALANCE PLACE FOR THE ENEMY1 STATS
-    e_hp = 3 + dif * (3* 0.5) + dif * 0.5;
+    e_hp = 3 + dif * (2* 0.5) + dif * 0.5;
     e_damage = 2+ dif * (2 * 0.5) + dif * 0.5;
     e_speed = 180 + dif * 40;
     coin_gain = 20 - dif * (20 * 0.3) - dif * 1;
