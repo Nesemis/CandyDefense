@@ -15,6 +15,7 @@ UI(textures[3]){
     std::pair<int, int> v0 = { 0,1 }; //Thats the initial velocity for the enemy, CHANGE HERE TO BE ADEQUATE TO THE CREATED LEVEL(change makeTurns()?)
     base = { 7,4 }; // Thats the left up corner of the base, CHANGE HERE ADEQUATE TO THE CREATED LEVEL
     makeTiles(textures);
+    makeScenery(textures);
     turns.emplace_back(v0);
     makeTurns(); 
     turnPoints.emplace_back(base);
@@ -56,7 +57,33 @@ void Level::makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures)
 
         }
     }
+
+
 }
+void Level::makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures) {
+    Asset tree1 = Asset(sf::Vector2f(10,200), textures[8]);
+    Asset tree1_1 = Asset(sf::Vector2f(500, 500), textures[8]);
+    Asset tree2 = Asset(sf::Vector2f(1500,350), textures[8]);
+    Asset tree3 = Asset(sf::Vector2f(1100,600), textures[8]);
+    Asset tree3_1 = Asset(sf::Vector2f(1000, 10), textures[8]);
+    tree1.setScale(2.0f, 2.0f);
+    tree1.setTextureRect(sf::IntRect(7,231,33,26));
+    tree1_1.setScale(2.0f, 2.0f);
+    tree1_1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree2.setScale(2.0f, 2.0f);
+    tree2.setTextureRect(sf::IntRect(6, 183, 40, 41));
+    tree3.setScale(1.8f, 1.8f);
+    tree3.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    tree3_1.setScale(2.0f, 2.0f);
+    tree3_1.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1_1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree2));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3_1));
+
+}
+
 void Level::makeTurns() {
     //This function takes the whole path and finds the turns for the velocity vector
     //At first we take the diffrence of distance between two tiles
@@ -120,12 +147,35 @@ void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Textur
                 if (100 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
                     coins -= 100;
                     vecTowers.emplace_back(std::make_unique<CandyTower>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                    (*it)->type = 1;
+                    //Instead of checking it every frame, I want to check if I placed the tower on the background sprite here
+                    for (auto it_Bs = vecBackgroundSprites.begin(); it_Bs != vecBackgroundSprites.end();) {
+                        if ((*it_Bs)->getGlobalBounds().intersects(vecTowers[vecTowers.size() - 1].get()->getGlobalBounds()))
+                        {
+                            it_Bs = vecBackgroundSprites.erase(it_Bs);
+                        }
+                        else {
+                            it_Bs++;
+                        }
+
+                    }
                 }
                 break;
             case bubblegumShotP:
                 if (300 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
                     coins -= 300;
                     vecTowers.emplace_back(std::make_unique<BubblegumShot>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                    (*it)->type = 1;
+                    for (auto it_Bs = vecBackgroundSprites.begin(); it_Bs != vecBackgroundSprites.end();) {
+                        if ((*it_Bs)->getGlobalBounds().intersects(vecTowers[vecTowers.size() - 1].get()->getGlobalBounds()))
+                        {
+                            it_Bs = vecBackgroundSprites.erase(it_Bs);
+                        }
+                        else {
+                            it_Bs++;
+                        }
+
+                    }
                 }
                 break;
             case caneBlasterP:
@@ -158,6 +208,17 @@ void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Textur
                     if (allGreen) {
                         coins -= 500;
                         vecTowers.emplace_back(std::make_unique<CaneBlaster>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                        (*it)->type = 1;
+                        for (auto it_Bs = vecBackgroundSprites.begin(); it_Bs != vecBackgroundSprites.end();) {
+                            if ((*it_Bs)->getGlobalBounds().intersects(vecTowers[vecTowers.size() - 1].get()->getGlobalBounds()))
+                            {
+                                it_Bs = vecBackgroundSprites.erase(it_Bs);
+                            }
+                            else {
+                                it_Bs++;
+                            }
+
+                        }
                     }
                 }
                 break;
@@ -188,6 +249,17 @@ void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Textur
                     if (allGreen) {
                         coins -= 1000;
                         vecTowers.emplace_back(std::make_unique<SweetEraser>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
+                        (*it)->type = 1;
+                        for (auto it_Bs = vecBackgroundSprites.begin(); it_Bs != vecBackgroundSprites.end();) {
+                            if ((*it_Bs)->getGlobalBounds().intersects(vecTowers[vecTowers.size() - 1].get()->getGlobalBounds()))
+                            {
+                                it_Bs = vecBackgroundSprites.erase(it_Bs);
+                            }
+                            else {
+                                it_Bs++;
+                            }
+
+                        }
                     }
                 }
                 break;
@@ -378,6 +450,9 @@ void Level::render(sf::RenderWindow& window) {
     }
     for (const auto& bullet : vecBullets) {
         bullet.get()->draw(window);
+    }
+    for (const auto& bSprite : vecBackgroundSprites) {
+        bSprite.get()->draw(window);
     }
     UI.render(window);
 }

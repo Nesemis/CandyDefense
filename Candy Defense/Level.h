@@ -30,10 +30,12 @@ private:
 	std::vector<std::unique_ptr<Enemy>> vecEnemies;
 	std::vector<std::unique_ptr<Tile>> vecTiles;
 	std::vector<std::unique_ptr<Bullet>> vecBullets;
+	std::vector<std::unique_ptr<Asset>> vecBackgroundSprites;
 	UserInterface UI;
 	void makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void makeTurns();
 	void makeWaves();
+	void makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures);
 	sf::Clock e_timer;
 	int wave = 0;
 	int hp = 100;
