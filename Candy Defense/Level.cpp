@@ -1,26 +1,8 @@
 #include "Level.h"
 
-Level::Level(std::vector<std::shared_ptr<sf::Texture>>& textures, int level_,int dif_):level(level_), dif(dif_),
+Level::Level(std::vector<std::shared_ptr<sf::Texture>>& textures,int dif_): 
+dif(dif_),
 UI(textures[3]){
-    path = {
-    {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8}, {2, 9}, {2, 10}, {2, 11},
-    {3, 11}, {4, 11},  {5, 11},  {6, 11}, {7, 11}, {8, 11}, {9, 11}, {10, 11},  {11, 11}, {12, 11}, {13, 11}, {14, 11}, {15, 11},  {16, 11}, {17, 11}, {18, 11}, {19, 11}, {20, 11},  {21, 11}, {22, 11},{23, 11},{24, 11},{25, 11},{26, 11},{27, 11},{28, 11},{29, 11},
-    {29, 11}, {29, 10}, {29, 9}, {29, 8}, {29, 7}, {29, 6}, {29, 5}, {29, 4}, {29, 3}, {29, 2},
-    {28, 2},{27, 2}, {26, 2}, {25, 2}, {24, 2}, {23, 2}, {22, 2}, {21, 2}, {20, 2}, {19, 2}, {18, 2}, {17, 2}, {16, 2}, {15, 2}, {14, 2}, {13, 2}, {12, 2}, {11, 2}, {10, 2}, {9, 2}, {8, 2}, {7, 2}, {6, 2}, {5, 2},
-    {5, 3}, {5, 4}, {5, 5}, {5, 6}, {5, 7}, {5, 8}, 
-    {6, 8}, {7, 8},{8, 8},{9,8}, {10, 8}, {11, 8}, {12, 8}, {13, 8},{14, 8},{15, 8},{16, 8},{17, 8},{18, 8},{19, 8},{20,8}, {21, 8},{22, 8},{23, 8},{24, 8}, {25, 8},{26, 8},
-    {26, 8}, {26, 7}, {26, 6}, {26, 5}, {26, 5},
-    {25, 5}, {24, 5}, {23, 5}, {22, 5}, {21,5}, {20, 5}, {19, 5}, {18, 5}, {17, 5}, {16, 5}, {15, 5}, {14,5}, {13, 5}, {12, 5}, {11, 5}, {10, 5}
-    };
-    std::pair<int, int> v0 = { 0,1 }; //Thats the initial velocity for the enemy, CHANGE HERE TO BE ADEQUATE TO THE CREATED LEVEL(change makeTurns()?)
-    base = { 7,4 }; // Thats the left up corner of the base, CHANGE HERE ADEQUATE TO THE CREATED LEVEL
-    makeTiles(textures);
-    makeScenery(textures);
-    turns.emplace_back(v0);
-    makeTurns(); 
-    turnPoints.emplace_back(base);
-    makeWaves();
-    e_timer.restart();
 };
 void Level::makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures)
 {
@@ -60,29 +42,6 @@ void Level::makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures)
 
 
 }
-void Level::makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures) {
-    Asset tree1 = Asset(sf::Vector2f(10,200), textures[8]);
-    Asset tree1_1 = Asset(sf::Vector2f(500, 500), textures[8]);
-    Asset tree2 = Asset(sf::Vector2f(1500,350), textures[8]);
-    Asset tree3 = Asset(sf::Vector2f(1100,600), textures[8]);
-    Asset tree3_1 = Asset(sf::Vector2f(1000, 10), textures[8]);
-    tree1.setScale(2.0f, 2.0f);
-    tree1.setTextureRect(sf::IntRect(7,231,33,26));
-    tree1_1.setScale(2.0f, 2.0f);
-    tree1_1.setTextureRect(sf::IntRect(7, 231, 33, 26));
-    tree2.setScale(2.0f, 2.0f);
-    tree2.setTextureRect(sf::IntRect(6, 183, 40, 41));
-    tree3.setScale(1.8f, 1.8f);
-    tree3.setTextureRect(sf::IntRect(55, 264, 25, 40));
-    tree3_1.setScale(2.0f, 2.0f);
-    tree3_1.setTextureRect(sf::IntRect(55, 264, 25, 40));
-    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1));
-    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1_1));
-    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree2));
-    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3));
-    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3_1));
-
-}
 
 void Level::makeTurns() {
     //This function takes the whole path and finds the turns for the velocity vector
@@ -111,20 +70,6 @@ void Level::makeTurns() {
     
 
 }
-void Level::makeWaves()
-{
-    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 ,2}));
-    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,1}));
-    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,2}));
-    vecWaves.emplace_back(Wave({ 15, 2, 1, 200 ,1}));
-    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,1}));
-    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,0.5}));
-    vecWaves.emplace_back(Wave({ 20, 8, 5, 300 ,1}));
-    vecWaves.emplace_back(Wave({ 0, 15, 0, 400 ,1}));
-    vecWaves.emplace_back(Wave({ 20, 5, 5, 400 ,1}));
-    vecWaves.emplace_back(Wave({ 0, 0, 15, 0 ,0.5}));
-}
-
 void Level::update(sf::Keyboard::Key key, std::vector<std::shared_ptr<sf::Texture>>& textures)
 {
     //This update is called when the game notices the player input, it is only called in event section 
@@ -179,7 +124,7 @@ void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Textur
                 }
                 break;
             case caneBlasterP:
-                if (500 <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
+                if (caneBlasterP <= coins && (*it).get()->type == 0 && tileDim.contains(sf::Vector2f(static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)))) {
                     bool allGreen = true;
                     for (int i = 0; i < caneBlasterS; i++) {
                         for (int j = 0; j < caneBlasterS; j++) {
@@ -208,7 +153,16 @@ void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Textur
                     if (allGreen) {
                         coins -= 500;
                         vecTowers.emplace_back(std::make_unique<CaneBlaster>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
-                        (*it)->type = 1;
+                        for (int i = 0; i < caneBlasterS; i++) {
+                            for (int j = 0; j < caneBlasterS; j++) {
+                                int index = it - vecTiles.begin() + (i * 14) + j;
+                                if (index < vecTiles.size())
+                                {
+                                    auto tile_it = it + (i * 14) + j;
+                                    (*tile_it)->type = 1;
+                                }
+                            }
+                        }
                         for (auto it_Bs = vecBackgroundSprites.begin(); it_Bs != vecBackgroundSprites.end();) {
                             if ((*it_Bs)->getGlobalBounds().intersects(vecTowers[vecTowers.size() - 1].get()->getGlobalBounds()))
                             {
@@ -249,7 +203,16 @@ void Level::update(sf::Vector2i mouse_pos,std::vector<std::shared_ptr<sf::Textur
                     if (allGreen) {
                         coins -= 1000;
                         vecTowers.emplace_back(std::make_unique<SweetEraser>(sf::Vector2f(tileDim.left, tileDim.top), textures_[7]));
-                        (*it)->type = 1;
+                        for (int i = 0; i < sweetEraserS; i++) {
+                            for (int j = 0; j < sweetEraserS; j++) {
+                                int index = it - vecTiles.begin() + (i * 14) + j;
+                                if (index < vecTiles.size())
+                                {
+                                    auto tile_it = it + (i * 14) + j;
+                                    (*tile_it)->type = 1;
+                                }
+                            }
+                        }
                         for (auto it_Bs = vecBackgroundSprites.begin(); it_Bs != vecBackgroundSprites.end();) {
                             if ((*it_Bs)->getGlobalBounds().intersects(vecTowers[vecTowers.size() - 1].get()->getGlobalBounds()))
                             {
@@ -321,19 +284,19 @@ void Level::update(sf::Time &elapsed, std::vector<std::shared_ptr<sf::Texture>>&
     case 0: e_timer.restart();
     case 1: if (e_timer.getElapsedTime().asSeconds() >= vecWaves[wave].interval) {
         vecWaves[wave].e1--;
-        vecEnemies.emplace_back(std::make_unique<Enemy1>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
+        vecEnemies.emplace_back(std::make_unique<Enemy1>(sf::Vector2f(path[0].first*50, path[0].second * 50), textures[6], turns, turnPoints, dif));
         e_timer.restart();
         break;
     }
    case 2: if (e_timer.getElapsedTime().asSeconds() >= vecWaves[wave].interval) {
         vecWaves[wave].e2--;
-        vecEnemies.emplace_back(std::make_unique<Enemy2>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
+        vecEnemies.emplace_back(std::make_unique<Enemy2>(sf::Vector2f(path[0].first * 50, path[0].second * 50), textures[6], turns, turnPoints, dif));
         e_timer.restart();
         break;
     }
     case 3: if (e_timer.getElapsedTime().asSeconds() >= vecWaves[wave].interval) {
         vecWaves[wave].e3--;
-        vecEnemies.emplace_back(std::make_unique<Enemy3>(sf::Vector2f(100, 0), textures[6], turns, turnPoints, dif));
+        vecEnemies.emplace_back(std::make_unique<Enemy3>(sf::Vector2f(path[0].first * 50, path[0].second * 50), textures[6], turns, turnPoints, dif));
         e_timer.restart();
         break;
     }
@@ -455,4 +418,213 @@ void Level::render(sf::RenderWindow& window) {
         bSprite.get()->draw(window);
     }
     UI.render(window);
+}
+
+Level1::Level1(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif_) :
+    Level(textures,dif)
+{
+    path = {
+     {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8}, {2, 9}, {2, 10}, {2, 11},
+     {3, 11}, {4, 11},  {5, 11},  {6, 11}, {7, 11}, {8, 11}, {9, 11}, {10, 11},  {11, 11}, {12, 11}, {13, 11}, {14, 11}, {15, 11},  {16, 11}, {17, 11}, {18, 11}, {19, 11}, {20, 11},  {21, 11}, {22, 11},{23, 11},{24, 11},{25, 11},{26, 11},{27, 11},{28, 11},{29, 11},
+     {29, 11}, {29, 10}, {29, 9}, {29, 8}, {29, 7}, {29, 6}, {29, 5}, {29, 4}, {29, 3}, {29, 2},
+     {28, 2},{27, 2}, {26, 2}, {25, 2}, {24, 2}, {23, 2}, {22, 2}, {21, 2}, {20, 2}, {19, 2}, {18, 2}, {17, 2}, {16, 2}, {15, 2}, {14, 2}, {13, 2}, {12, 2}, {11, 2}, {10, 2}, {9, 2}, {8, 2}, {7, 2}, {6, 2}, {5, 2},
+     {5, 3}, {5, 4}, {5, 5}, {5, 6}, {5, 7}, {5, 8},
+     {6, 8}, {7, 8},{8, 8},{9,8}, {10, 8}, {11, 8}, {12, 8}, {13, 8},{14, 8},{15, 8},{16, 8},{17, 8},{18, 8},{19, 8},{20,8}, {21, 8},{22, 8},{23, 8},{24, 8}, {25, 8},{26, 8},
+     {26, 8}, {26, 7}, {26, 6}, {26, 5}, {26, 5},
+     {25, 5}, {24, 5}, {23, 5}, {22, 5}, {21,5}, {20, 5}, {19, 5}, {18, 5}, {17, 5}, {16, 5}, {15, 5}, {14,5}, {13, 5}, {12, 5}, {11, 5}, {10, 5}
+    };
+    std::pair<int, int> v0 = { 0,1 }; //Thats the initial velocity for the enemy for each level
+    base = { 7,4 }; // Thats the left up corner of the base for each level
+    makeTiles(textures);
+    makeScenery(textures);
+    turns.emplace_back(v0);
+    makeTurns();
+    turnPoints.emplace_back(base);
+    makeWaves();
+    e_timer.restart();
+    coins = 100;
+    dif = dif_;
+}
+
+void Level1::makeWaves()
+{
+    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 ,2 }));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,1 }));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,2 }));
+    vecWaves.emplace_back(Wave({ 15, 2, 1, 200 ,1 }));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 20, 8, 5, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 0, 15, 0, 400 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 20, 5, 5, 400 ,0.2 }));
+    vecWaves.emplace_back(Wave({ 0, 0, 15, 0 ,0.2 }));
+}
+
+void Level1::makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures) {
+    Asset tree1 = Asset(sf::Vector2f(10, 200), textures[8]);
+    Asset tree1_1 = Asset(sf::Vector2f(500, 500), textures[8]);
+    Asset tree2 = Asset(sf::Vector2f(1500, 350), textures[8]);
+    Asset tree3 = Asset(sf::Vector2f(1100, 600), textures[8]);
+    Asset tree3_1 = Asset(sf::Vector2f(1000, 10), textures[8]);
+    tree1.setScale(2.0f, 2.0f);
+    tree1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree1_1.setScale(2.0f, 2.0f);
+    tree1_1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree2.setScale(2.0f, 2.0f);
+    tree2.setTextureRect(sf::IntRect(6, 183, 40, 41));
+    tree3.setScale(1.8f, 1.8f);
+    tree3.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    tree3_1.setScale(2.0f, 2.0f);
+    tree3_1.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1_1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree2));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3_1));
+
+}
+
+Level2::Level2(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif_) :
+    Level(textures, dif)
+{
+    path = {
+     {1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {1, 7}, {1, 8}, {1, 9}, {1, 10}, {1, 11},{1, 12},
+     {2, 12},{3, 12}, {4, 12},  {5, 12}, 
+     {5, 11},{5, 10},{5, 9},{5, 8},{5, 7},{5, 6},{5, 5},{5, 4},{5, 3},{5, 2},{5, 1},
+     {6, 1}, {7, 1}, {8, 1}, {9, 1}, 
+     {9, 2},{9, 3},{9, 4},{9, 5},{9, 6},{9, 7},{9, 8},{9, 9},{9, 10},{9, 11},{9, 12},
+     {10, 12}, {11, 12}, {12, 12}, {13, 12}, 
+     {13, 11}, {13, 10}, {13, 9}, {13, 8}, {13, 7}, {13, 6}, {13, 5}, {13, 4}, {13, 3}, {13, 2}, {13, 1},
+     {14, 1}, {15, 1}, {16, 1}, {17, 1}, 
+     {17, 2}, {17, 3}, {17, 4}, {17, 5}, {17, 6}, {17, 7}, {17, 8},  {17, 9}, {17, 10}, {17, 11},  {17, 12}, 
+     {18, 12}, {19, 12}, {20, 12}, {21, 12},
+     {21, 11}, {21, 10}, {21, 9}, {21, 8}, {21, 7}, {21, 6}, {21, 5}, {21, 4}, {21, 3}, {21, 2}, {21, 1},
+     {22, 1}, {23, 1}, {24, 1}, {25, 1},
+     {25, 2}, {25, 3}, {25, 4}, {25, 5}, {25, 6}, {25, 7}, {25, 8}, {25, 9}, {25, 10}, {25, 11}, {25, 12},
+     {26, 12}, {27, 12}, {28, 12}, {29, 12},
+     {29, 12}, {29, 11}, {29, 10}, {29, 9}, {29, 8}, {29, 7},  {29, 6}, {29, 5}, {29, 4}, 
+    };
+    std::pair<int, int> v0 = { 0,1 };
+    base = { 28,1 }; 
+    makeTiles(textures);
+    makeScenery(textures);
+    turns.emplace_back(v0);
+    makeTurns();
+    turnPoints.emplace_back(base);
+    makeWaves();
+    e_timer.restart();
+    coins = 100;
+    dif = dif_;
+}
+
+void Level2::makeWaves()
+{
+    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 ,2 }));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,1 }));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,2 }));
+    vecWaves.emplace_back(Wave({ 15, 2, 1, 200 ,1 }));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,1 }));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 20, 8, 5, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 0, 15, 0, 400 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 20, 5, 5, 400 ,0.2 }));
+    vecWaves.emplace_back(Wave({ 0, 0, 15, 0 ,0.5 }));
+}
+
+void Level2::makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures) {
+    Asset tree1 = Asset(sf::Vector2f(100, 200), textures[8]);
+    Asset tree1_1 = Asset(sf::Vector2f(500, 500), textures[8]);
+    Asset tree2 = Asset(sf::Vector2f(1350, 350), textures[8]);
+    Asset tree3 = Asset(sf::Vector2f(1120, 500), textures[8]);
+    Asset tree3_1 = Asset(sf::Vector2f(950, 250), textures[8]);
+    tree1.setScale(2.0f, 2.0f);
+    tree1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree1_1.setScale(2.0f, 2.0f);
+    tree1_1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree2.setScale(2.0f, 2.0f);
+    tree2.setTextureRect(sf::IntRect(6, 183, 40, 41));
+    tree3.setScale(1.8f, 1.8f);
+    tree3.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    tree3_1.setScale(2.0f, 2.0f);
+    tree3_1.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1_1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree2));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3_1));
+
+}
+
+
+Level3::Level3(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif_) :
+    Level(textures, dif)
+{
+    path = {
+     {0, 4}, {1, 4},{2, 4},{3, 4},
+     {3, 5}, {3, 6}, {3, 7},
+     {4, 7}, {5, 7}, {6, 7}, {7, 7},
+     {7, 6}, {7, 5}, {7, 4}, {7, 3}, {7, 2}, {7, 1},
+     {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 1}, {13, 1},
+     {13, 2}, {13, 3}, {13, 4}, {13, 5}, {13, 6}, {13, 7},
+     {12, 7}, {11, 7}, {10, 7},
+     {10, 6}, {10, 5}, {10, 4},
+     {11, 4}, {12, 4}, {13, 4}, {14, 4}, {15, 4}, {16, 4}, {17, 4}, {18, 4}, {19, 4}, {20, 4}, {21, 4}, {22, 4},
+     {22, 5}, {22, 5}, {22, 6}, {22, 7},
+     {21, 7}, {20, 7}, {19, 7},
+     {19, 6}, {19, 5}, {19, 4}, {19, 3}, {19, 2}, {19, 1},
+     {20, 1}, {21, 1}, {22, 1}, {23, 1}, {24, 1}, {25, 1},
+     {25, 2}, {25, 3}, {25, 4}, {25, 5}, {25, 6}, {25, 7}, {25, 8},  {25, 9},
+     {25, 9}, {24, 9}, {23, 9}, {22, 9}, {21, 9}, {20, 9}, {19, 9}, {18, 9}, {17, 9}, {16, 9}, {15, 9}, {14, 9},  {13, 9},  {12, 9},  {11, 9}, {10, 9}, {9, 9}, {8, 9}, {7, 9}, {6, 9}, {5, 9}, {4, 9}, {3, 9}, {2, 9}, {1, 9},
+     {1, 10}, {1, 11}, 
+     {2, 11}, {3, 11}, {4, 11}, {5, 11}, {6, 11}, {7, 11}, {8, 11}, {9, 11}, {10, 11}, {11, 11}, {12, 11}, {13, 11}, {14, 11}, {15, 11}, {16, 11}, {17, 11}, {18, 11}, {19, 11}, {20, 11}, {21, 11}, {22, 11}, {23, 11}, {24, 11}, {25, 11}, {26, 11}, {27, 11},
+    }; 
+    std::pair<int, int> v0 = { 1,0 };
+    base = { 28,10 };
+    makeTiles(textures);
+    makeScenery(textures);
+    turns.emplace_back(v0);
+    makeTurns();
+    turnPoints.emplace_back(base);
+    makeWaves();
+    e_timer.restart();
+    coins = 100;
+    dif = dif_;
+}
+
+void Level3::makeWaves()
+{
+    vecWaves.emplace_back(Wave({ 5, 0, 0, 100 ,2 }));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,1 }));
+    vecWaves.emplace_back(Wave({ 10, 1, 0, 200 ,2 }));
+    vecWaves.emplace_back(Wave({ 15, 2, 1, 200 ,1 }));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,1 }));
+    vecWaves.emplace_back(Wave({ 15, 5, 3, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 20, 8, 5, 300 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 0, 15, 0, 400 ,0.5 }));
+    vecWaves.emplace_back(Wave({ 20, 5, 5, 400 ,0.2 }));
+    vecWaves.emplace_back(Wave({ 0, 0, 15, 0 ,0.5 }));
+}
+
+void Level3::makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures) {
+    Asset tree1 = Asset(sf::Vector2f(1480, 120), textures[8]);
+    Asset tree1_1 = Asset(sf::Vector2f(100, 100), textures[8]);
+    Asset tree2 = Asset(sf::Vector2f(800, 300), textures[8]);
+    Asset tree3 = Asset(sf::Vector2f(1400, 360), textures[8]);
+    Asset tree3_1 = Asset(sf::Vector2f(760, 80), textures[8]);
+    tree1.setScale(2.0f, 2.0f);
+    tree1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree1_1.setScale(2.0f, 2.0f);
+    tree1_1.setTextureRect(sf::IntRect(7, 231, 33, 26));
+    tree2.setScale(2.0f, 2.0f);
+    tree2.setTextureRect(sf::IntRect(6, 183, 40, 41));
+    tree3.setScale(1.8f, 1.8f);
+    tree3.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    tree3_1.setScale(2.0f, 2.0f);
+    tree3_1.setTextureRect(sf::IntRect(55, 264, 25, 40));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree1_1));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree2));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3));
+    vecBackgroundSprites.emplace_back(std::make_unique<Asset>(tree3_1));
+
 }

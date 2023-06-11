@@ -17,15 +17,16 @@ void Enemy::update(sf::Time& elapsed, std::vector<std::unique_ptr<Bullet>>& bull
     // here it needs to chceck if after the move it reached the turn and should currentTurn++
     float pos_x = this->getPosition().x;
     float pos_y = this->getPosition().y;
-    if ((pos_x >= (static_cast<float>(turnP[currentTurn].first)*50) &&( velocity.x > 0))
+    if (((pos_x >= (static_cast<float>(turnP[currentTurn].first)*50) &&( velocity.x > 0))
     || (pos_x <= (static_cast<float>(turnP[currentTurn].first)*50) && (velocity.x < 0))
     || (pos_y <= (static_cast<float>(turnP[currentTurn].second)*50) && (velocity.y < 0))
-    || (pos_y >= (static_cast<float>(turnP[currentTurn].second)*50) && (velocity.y > 0))
+    || (pos_y >= (static_cast<float>(turnP[currentTurn].second)*50) && (velocity.y > 0)))
+    && (currentTurn != turnP.size()-1)
     ){ 
         currentTurn++;
     };
     // if the enemy colides with the base tile, change reached target to true
-    sf::Vector2f base((static_cast<float>(turnP[7].first)+1)*50, (static_cast<float>(turnP[7].second)+1)*50);
+    sf::Vector2f base((static_cast<float>(turnP[turnP.size()-1].first)+1)*50, (static_cast<float>(turnP[turnP.size() - 1].second)+1)*50);
     if (this->getGlobalBounds().intersects(sf::FloatRect(base, sf::Vector2f(50.0f, 50.0f))))
     {
         reachedTarget = true;
@@ -82,14 +83,7 @@ void Enemy::updateAnimation(int time)
 {
     
     static int frameTime = 0;
-    frameTime += time;
-    if (frameTime >= 700)
-    {
-        frameTime -= 700;
-        currentFrame = (currentFrame + 1) % 4;
-    }
 
-    this->setTextureRect(sf::IntRect(currentFrame * 16 + 65, 18, 16, 15));
 }
 
 
@@ -104,6 +98,21 @@ Enemy1::Enemy1(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     e_damage = 2+ dif * (2 * 0.5) + dif * 0.5;
     e_speed = 180 + dif * 40;
     coin_gain = 20 - dif * (20 * 0.3) - dif * 1;
+
+}
+void Enemy1::updateAnimation(int time)
+{
+
+    static int frameTime = 0;
+    frameTime += time;
+    if (frameTime >= 700)
+    {
+        frameTime -= 700;
+        currentFrame = (currentFrame + 1) % 4;
+        this->setTextureRect(sf::IntRect(currentFrame * 16 + 65, 49, 14, 14));
+    }
+
+
 }
 
 Enemy2::Enemy2(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif) :
@@ -117,6 +126,21 @@ Enemy2::Enemy2(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     e_speed = 270 + dif * 50;
     coin_gain = 25 - dif * (25 * 0.3) - dif * 1;
 }
+void Enemy2::updateAnimation(int time)
+{
+
+    static int frameTime = 0;
+    frameTime += time;
+    if (frameTime >= 700)
+    {
+        frameTime -= 700;
+        currentFrame = (currentFrame + 1) % 4;
+        this->setTextureRect(sf::IntRect(currentFrame * 16 + 65, 18, 16, 15));
+    }
+
+
+}
+
 
 Enemy3::Enemy3(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif) :
     Enemy(position, texture_, turns, turnP, dif)
@@ -128,4 +152,18 @@ Enemy3::Enemy3(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, st
     e_damage = 5 + dif * (5 * 0.5) + dif * 0.5;
     e_speed = 100 + dif * 25;
     coin_gain = 50 - dif * (50 * 0.3) - dif * 1;
+}
+void Enemy3::updateAnimation(int time)
+{
+
+    static int frameTime = 0;
+    frameTime += time;
+    if (frameTime >= 700)
+    {
+        frameTime -= 700;
+        currentFrame = (currentFrame + 1) % 4;
+        this->setTextureRect(sf::IntRect(currentFrame * 16 + 64, 33, 16, 16));
+    }
+
+
 }

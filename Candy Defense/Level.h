@@ -13,14 +13,15 @@ struct Wave {
 class Level
 {
 public:
-	Level(std::vector<std::shared_ptr<sf::Texture>>& textures, int level, int dif);
+	Level(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif);
 	void render(sf::RenderWindow& window);
 	void update(sf::Keyboard::Key key, std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void update(sf::Vector2i mouse_pos, std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void update(sf::Time& elapsed, std::vector<std::shared_ptr<sf::Texture>>& textures, sf::Vector2i mouse_pos);
 	bool getHasWon();
 	bool getHasLost();
-private:
+	virtual ~Level() {};
+protected:
 	std::pair<int, int> base;
 	std::vector<std::pair<int, int>> path; // path for the enemies to follow
 	std::vector<std::pair<int, int>> turns; // Turn scalars  for the enemies pathfinding
@@ -34,15 +35,39 @@ private:
 	UserInterface UI;
 	void makeTiles(std::vector<std::shared_ptr<sf::Texture>>& textures);
 	void makeTurns();
-	void makeWaves();
-	void makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures);
+	virtual void makeWaves() = 0;
+	virtual void makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures) = 0;
 	sf::Clock e_timer;
 	int wave = 0;
 	int hp = 100;
-	int coins = 2000;
+	int coins = 400;
 	int level = 1;
 	int dif = 0;
 	bool has_won = false;
 	bool has_lost = false;
 };
 
+class Level1 : public Level
+{
+public:
+	Level1(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif);
+	virtual void makeWaves();
+	virtual void makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures);
+	virtual ~Level1()override {};
+};
+class Level2 : public Level
+{
+public:
+	Level2(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif);
+	virtual void makeWaves();
+	virtual void makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures);
+	virtual ~Level2()override {};
+};
+class Level3 : public Level
+{
+public:
+	Level3(std::vector<std::shared_ptr<sf::Texture>>& textures, int dif);
+	virtual void makeWaves();
+	virtual void makeScenery(std::vector<std::shared_ptr<sf::Texture>>& textures);
+	virtual ~Level3()override {};
+};

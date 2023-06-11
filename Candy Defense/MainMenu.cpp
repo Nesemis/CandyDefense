@@ -3,33 +3,36 @@
 //It NEEDS to have an & sign here, because otherwise you would try to copy the vector,
 //That attempt would try to copy the unique pointer, and it would result a compile error 
 MainMenu::MainMenu(std::vector<std::shared_ptr<sf::Texture>>& textures) {
-    level1 = std::make_unique<Asset>(sf::Vector2f(125, 30), textures[0]);
-    level2 = std::make_unique<Asset>(sf::Vector2f(125, 230), textures[1]);
-    level3 = std::make_unique<Asset>(sf::Vector2f(125, 430), textures[2]);
+    level1 = std::make_unique<Asset>(sf::Vector2f(250, 50), textures[0]);
+    level2 = std::make_unique<Asset>(sf::Vector2f(250, 350), textures[1]);
+    level3 = std::make_unique<Asset>(sf::Vector2f(250, 650), textures[2]);
     if (!kalam.loadFromFile("fonts/Kalam-Regular.ttf"))//checking if we loaded the font
     {
         std::cout << "Error loading Kalam Font!\n Make sure theres fonts file in the same file as main.cpp and theres Kalam-Regular.ttf in it!" << std::endl;
     }
     //Text settings
-    text1.setPosition(sf::Vector2f(500, 100));
+    text1.setPosition(sf::Vector2f(1000, 150));
     text1.setFont(kalam);
     text1.setString("Easy");
+    text1.setCharacterSize(40);
     text1.setOutlineColor(sf::Color::White);
     text1.setOutlineThickness(1.5); // Default difficulty graphics
 
-    text2.setPosition(sf::Vector2f(500, 300));
+    text2.setPosition(sf::Vector2f(1000, 450));
     text2.setFont(kalam);
     text2.setString("Medium");
+    text2.setCharacterSize(40);
     text2.setOutlineColor(sf::Color::White);
 
-    text3.setPosition(sf::Vector2f(500, 500));
+    text3.setPosition(sf::Vector2f(1000, 750));
     text3.setFont(kalam);
     text3.setString("Hard");
+    text3.setCharacterSize(40);
     text3.setOutlineColor(sf::Color::White);
     
-    level1->setScale(0.7f, 0.7f);
-    level2->setScale(0.7f, 0.7f);
-    level3->setScale(0.7f, 0.7f);
+    level1->setScale(0.3f, 0.3f);
+    level2->setScale(0.3f, 0.3f);
+    level3->setScale(0.3f, 0.3f);
     
 }
 void MainMenu::render(sf::RenderWindow &window) {

@@ -24,20 +24,26 @@ protected:
     int currentFrame = 0; // Int to know which frame to display
     sf::IntRect textureRect;
     float getDistance(sf::Vector2f v1, sf::Vector2f v2);
-    void updateAnimation(int time);
+    virtual void updateAnimation(int time);
 };
 class Enemy1 : public Enemy
 {
 public:
     Enemy1(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif);
+    virtual void updateAnimation(int time);
+    virtual ~Enemy1() override {};
 };
 class Enemy2 : public Enemy
 {
 public:
     Enemy2(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif);
+    virtual void updateAnimation(int time);
+    virtual ~Enemy2() override {};
 };
 class Enemy3 : public Enemy
 {
 public:
     Enemy3(sf::Vector2f position, std::shared_ptr<sf::Texture>& texture_, std::vector<std::pair<int, int>> turns, std::vector<std::pair<int, int>> turnP, int dif);
+    virtual void updateAnimation(int time);
+    virtual ~Enemy3() override {};
 };

@@ -125,7 +125,18 @@ void Game::makeLS()
     mm.setIsRunning(true);
 }
 void Game::createLevel() {
-    level = std::make_unique<Level>(vecTextures,mm.getLevel(),mm.getDif());
+    switch (mm.getLevel()) {
+    case 1:
+        level = std::make_unique<Level1>(vecTextures, mm.getDif());
+        break;
+    case 2:
+        level = std::make_unique<Level2>(vecTextures, mm.getDif());
+        break;
+    case 3:
+        level = std::make_unique<Level3>(vecTextures, mm.getDif());
+        break;
+    }
+
 };
 
 void Game::render() {
@@ -144,7 +155,6 @@ void Game::render() {
 void Game::update() {
     if (!mm.isRunning() && level!=nullptr)
     {
-        std::cout << 1/elapsed.asSeconds() << std::endl;
         elapsed = clock.restart();
         sf::Event event;
         sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
@@ -213,7 +223,7 @@ void Game::update() {
 // I dont know how else could I check, and yet I want to the game to return to main menu
 // So I did it the way i didn't itend to
 void Game::mainMenuRender() {
-    window.clear(sf::Color::Black);
+    window.clear(sf::Color(255, 20, 147));
     mm.render(window);
 };
 void Game::mainMenuUpdate() {
